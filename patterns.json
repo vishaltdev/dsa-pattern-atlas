@@ -1,0 +1,1412 @@
+[
+  {
+    "id": 1,
+    "name": "Sliding Window",
+    "group": "Arrays & strings",
+    "problems": [
+      {
+        "id": 3,
+        "slug": "longest-substring-without-repeating-characters",
+        "title": "Longest Substring Without Repeating Characters"
+      },
+      {
+        "id": 76,
+        "slug": "minimum-window-substring",
+        "title": "Minimum Window Substring"
+      },
+      {
+        "id": 209,
+        "slug": "minimum-size-subarray-sum",
+        "title": "Minimum Size Subarray Sum"
+      },
+      {
+        "id": 424,
+        "slug": "longest-repeating-character-replacement",
+        "title": "Longest Repeating Character Replacement"
+      },
+      {
+        "id": 567,
+        "slug": "permutation-in-string",
+        "title": "Permutation In String"
+      },
+      {
+        "id": 904,
+        "slug": "fruit-into-baskets",
+        "title": "Fruit Into Baskets"
+      }
+    ],
+    "when": "A contiguous range can be updated as its boundaries move.",
+    "naive": "Enumerate every substring and rebuild its state.",
+    "why": "Each pointer moves forward at most n times; reuse the previous window.",
+    "example": "abcabcbb → longest unique window abc → 3",
+    "code": "Set<Character> seen = new HashSet<>();\nint left = 0, best = 0;\nfor (int right = 0; right < s.length(); right++) {\n    while (seen.contains(s.charAt(right)))\n        seen.remove(s.charAt(left++));\n    seen.add(s.charAt(right));\n    best = Math.max(best, right - left + 1);\n}",
+    "imports": "java.util.Set, java.util.HashSet",
+    "cost": "O(n) time; O(min(n, alphabet)) space",
+    "mistake": "Shrink with while, not if. For LC 76, use counts: a set loses multiplicity.",
+    "diagram": "expand right → duplicate? → shrink left → record valid length",
+    "applies": "3"
+  },
+  {
+    "id": 2,
+    "name": "Two Pointers",
+    "group": "Arrays & strings",
+    "problems": [
+      {
+        "id": 11,
+        "slug": "container-with-most-water",
+        "title": "Container With Most Water"
+      },
+      {
+        "id": 15,
+        "slug": "3sum",
+        "title": "3Sum"
+      },
+      {
+        "id": 16,
+        "slug": "3sum-closest",
+        "title": "3Sum Closest"
+      },
+      {
+        "id": 18,
+        "slug": "4sum",
+        "title": "4Sum"
+      },
+      {
+        "id": 42,
+        "slug": "trapping-rain-water",
+        "title": "Trapping Rain Water"
+      },
+      {
+        "id": 167,
+        "slug": "two-sum-ii-input-array-is-sorted",
+        "title": "Two Sum Ii Input Array Is Sorted"
+      }
+    ],
+    "when": "Sorted order or a boundary rule tells you which end to move.",
+    "naive": "Try all pairs in O(n²).",
+    "why": "A comparison eliminates a whole group of impossible pairs.",
+    "example": "[2,7,11,15], target 9 → indices [1,2] (one-based)",
+    "code": "int left = 0, right = a.length - 1;\nwhile (left < right) {\n    long sum = (long) a[left] + a[right];\n    if (sum == target) return new int[]{left + 1, right + 1};\n    if (sum < target) left++; else right--;\n}",
+    "imports": "None",
+    "cost": "O(n) time; O(1) extra space for sorted pair sum",
+    "mistake": "Pair-sum movement requires sorted data. Use long for sums that may overflow.",
+    "diagram": "left → [2 | 7 | 11 | 15] ← right → compare sum → discard one end",
+    "applies": "167"
+  },
+  {
+    "id": 3,
+    "name": "Fast / Slow Pointers",
+    "group": "Linked lists",
+    "problems": [
+      {
+        "id": 141,
+        "slug": "linked-list-cycle",
+        "title": "Linked List Cycle"
+      },
+      {
+        "id": 142,
+        "slug": "linked-list-cycle-ii",
+        "title": "Linked List Cycle Ii"
+      },
+      {
+        "id": 19,
+        "slug": "remove-nth-node-from-end-of-list",
+        "title": "Remove Nth Node From End Of List"
+      },
+      {
+        "id": 876,
+        "slug": "middle-of-the-linked-list",
+        "title": "Middle Of The Linked List"
+      },
+      {
+        "id": 160,
+        "slug": "intersection-of-two-linked-lists",
+        "title": "Intersection Of Two Linked Lists"
+      },
+      {
+        "id": 234,
+        "slug": "palindrome-linked-list",
+        "title": "Palindrome Linked List"
+      }
+    ],
+    "when": "Two walkers can expose a cycle, midpoint, or fixed gap.",
+    "naive": "Store every visited node to detect a cycle.",
+    "why": "In a cycle, the faster walker eventually laps the slower one.",
+    "example": "1 → 2 → 3 → 2 (cycle) → walkers eventually meet",
+    "code": "ListNode slow = head, fast = head;\nwhile (fast != null && fast.next != null) {\n    slow = slow.next;\n    fast = fast.next.next;\n    if (slow == fast) return true;\n}\nreturn false;",
+    "imports": "None; ListNode is supplied by the problem",
+    "cost": "O(n) time; O(1) space",
+    "mistake": "Compare node references, not values. Guard fast.next before advancing twice.",
+    "diagram": "slow: +1 node → fast: +2 nodes → meet inside a cycle",
+    "applies": "141"
+  },
+  {
+    "id": 4,
+    "name": "Binary Search on Sorted Data",
+    "group": "Search",
+    "problems": [
+      {
+        "id": 33,
+        "slug": "search-in-rotated-sorted-array",
+        "title": "Search In Rotated Sorted Array"
+      },
+      {
+        "id": 34,
+        "slug": "find-first-and-last-position-of-element-in-sorted-array",
+        "title": "Find First And Last Position Of Element In Sorted Array"
+      },
+      {
+        "id": 35,
+        "slug": "search-insert-position",
+        "title": "Search Insert Position"
+      },
+      {
+        "id": 153,
+        "slug": "find-minimum-in-rotated-sorted-array",
+        "title": "Find Minimum In Rotated Sorted Array"
+      },
+      {
+        "id": 162,
+        "slug": "find-peak-element",
+        "title": "Find Peak Element"
+      },
+      {
+        "id": 704,
+        "slug": "binary-search",
+        "title": "Binary Search"
+      }
+    ],
+    "when": "An ordered search range can be cut in half.",
+    "naive": "Scan every value in O(n).",
+    "why": "After comparing the middle, keep only the half that may contain the target.",
+    "example": "[1,3,5,7], target 5 → index 2",
+    "code": "int lo = 0, hi = a.length - 1;\nwhile (lo <= hi) {\n    int mid = lo + (hi - lo) / 2;\n    if (a[mid] == target) return mid;\n    if (a[mid] < target) lo = mid + 1;\n    else hi = mid - 1;\n}\nreturn -1;",
+    "imports": "None",
+    "cost": "O(log n) time; O(1) space",
+    "mistake": "Do not mix closed and half-open intervals. Rotated arrays require an extra sorted-half check.",
+    "diagram": "[lo … mid … hi] → compare → keep left or right half",
+    "applies": "704"
+  },
+  {
+    "id": 5,
+    "name": "Binary Search on Answer",
+    "group": "Search",
+    "problems": [
+      {
+        "id": 875,
+        "slug": "koko-eating-bananas",
+        "title": "Koko Eating Bananas"
+      },
+      {
+        "id": 1011,
+        "slug": "capacity-to-ship-packages-within-d-days",
+        "title": "Capacity To Ship Packages Within D Days"
+      },
+      {
+        "id": 410,
+        "slug": "split-array-largest-sum",
+        "title": "Split Array Largest Sum"
+      },
+      {
+        "id": 774,
+        "slug": "minimize-max-distance-to-gas-station",
+        "title": "Minimize Max Distance To Gas Station"
+      },
+      {
+        "id": 1283,
+        "slug": "find-the-smallest-divisor-given-a-threshold",
+        "title": "Find The Smallest Divisor Given A Threshold"
+      },
+      {
+        "id": 1482,
+        "slug": "minimum-number-of-days-to-make-m-bouquets",
+        "title": "Minimum Number Of Days To Make M Bouquets"
+      }
+    ],
+    "when": "Feasibility changes monotonically from false to true as an answer increases.",
+    "naive": "Try every possible answer and simulate it.",
+    "why": "Binary search finds the first feasible answer without testing the whole domain.",
+    "example": "Piles [3,6,7,11], h=8 → minimum speed 4",
+    "code": "while (lo < hi) {\n    int mid = lo + (hi - lo) / 2;\n    long hours = 0;\n    for (int pile : piles)\n        hours += (pile + (long) mid - 1) / mid;\n    if (hours <= h) hi = mid;\n    else lo = mid + 1;\n}",
+    "imports": "None; bounds: lo=1, hi=max(piles)",
+    "cost": "O(n log M) time; O(1) space for LC 875",
+    "mistake": "Prove monotonicity. LC 774 uses floating-point bounds and a precision stopping rule.",
+    "diagram": "infeasible × × × | ✓ ✓ feasible → find first ✓",
+    "applies": "875"
+  },
+  {
+    "id": 6,
+    "name": "Hashing / Frequency Maps",
+    "group": "Arrays & strings",
+    "problems": [
+      {
+        "id": 1,
+        "slug": "two-sum",
+        "title": "Two Sum"
+      },
+      {
+        "id": 49,
+        "slug": "group-anagrams",
+        "title": "Group Anagrams"
+      },
+      {
+        "id": 128,
+        "slug": "longest-consecutive-sequence",
+        "title": "Longest Consecutive Sequence"
+      },
+      {
+        "id": 217,
+        "slug": "contains-duplicate",
+        "title": "Contains Duplicate"
+      },
+      {
+        "id": 242,
+        "slug": "valid-anagram",
+        "title": "Valid Anagram"
+      },
+      {
+        "id": 347,
+        "slug": "top-k-frequent-elements",
+        "title": "Top K Frequent Elements"
+      }
+    ],
+    "when": "You need membership, occurrence counts, or grouping by a canonical key.",
+    "naive": "Scan existing keys for each input item.",
+    "why": "Hashing provides average constant-time lookup and updates.",
+    "example": "aabc → {a=2, b=1, c=1}",
+    "code": "Map<Character, Integer> frequency = new HashMap<>();\nfor (char c : s.toCharArray())\n    frequency.put(c, frequency.getOrDefault(c, 0) + 1);",
+    "imports": "java.util.Map, java.util.HashMap",
+    "cost": "O(n) expected time; O(k) space for k distinct keys",
+    "mistake": "getOrDefault reduces branching, not asymptotic work. A set cannot represent counts.",
+    "diagram": "a a b c → key → count → a:2 / b:1 / c:1",
+    "applies": "242"
+  },
+  {
+    "id": 7,
+    "name": "Prefix Sum / Running Sum",
+    "group": "Arrays & strings",
+    "problems": [
+      {
+        "id": 303,
+        "slug": "range-sum-query-immutable",
+        "title": "Range Sum Query Immutable"
+      },
+      {
+        "id": 560,
+        "slug": "subarray-sum-equals-k",
+        "title": "Subarray Sum Equals K"
+      },
+      {
+        "id": 724,
+        "slug": "find-pivot-index",
+        "title": "Find Pivot Index"
+      },
+      {
+        "id": 930,
+        "slug": "binary-subarrays-with-sum",
+        "title": "Binary Subarrays With Sum"
+      },
+      {
+        "id": 974,
+        "slug": "subarray-sums-divisible-by-k",
+        "title": "Subarray Sums Divisible By K"
+      },
+      {
+        "id": 523,
+        "slug": "continuous-subarray-sum",
+        "title": "Continuous Subarray Sum"
+      }
+    ],
+    "when": "Many range sums share overlapping work.",
+    "naive": "Sum the entire requested interval on every query.",
+    "why": "Subtract two cumulative totals to cancel the unwanted prefix.",
+    "example": "[2,4,1,5] → prefix [0,2,6,7,12]; range [1,3] → 12−2=10",
+    "code": "long[] prefix = new long[a.length + 1];\nfor (int i = 0; i < a.length; i++)\n    prefix[i + 1] = prefix[i] + a[i];\nlong sum = prefix[right + 1] - prefix[left];",
+    "imports": "None",
+    "cost": "O(n) preprocessing; O(1) query; O(n) space",
+    "mistake": "Use the extra leading zero. Subarray counting needs a map of previous prefix frequencies.",
+    "diagram": "prefix before left ┃ selected range ┃ prefix after right → subtract",
+    "applies": "303"
+  },
+  {
+    "id": 8,
+    "name": "Difference Array / Range Updates",
+    "group": "Arrays & strings",
+    "problems": [
+      {
+        "id": 370,
+        "slug": "range-addition",
+        "title": "Range Addition"
+      },
+      {
+        "id": 1094,
+        "slug": "car-pooling",
+        "title": "Car Pooling"
+      },
+      {
+        "id": 1109,
+        "slug": "corporate-flight-bookings",
+        "title": "Corporate Flight Bookings"
+      },
+      {
+        "id": 1893,
+        "slug": "check-if-all-the-integers-in-a-range-are-covered",
+        "title": "Check If All The Integers In A Range Are Covered"
+      },
+      {
+        "id": 1943,
+        "slug": "describe-the-painting",
+        "title": "Describe The Painting"
+      },
+      {
+        "id": 2381,
+        "slug": "shifting-letters-ii",
+        "title": "Shifting Letters Ii"
+      }
+    ],
+    "when": "Many additive interval updates can be applied before reading final values.",
+    "naive": "Visit every element for every range update.",
+    "why": "Record only where an addition starts and ends; prefix-sum once at the end.",
+    "example": "Length 5, add 3 to [1,3] → [0,3,3,3,0]",
+    "code": "long[] diff = new long[n + 1];\ndiff[left] += value;\ndiff[right + 1] -= value;\nlong running = 0;\nfor (int i = 0; i < n; i++) {\n    running += diff[i];\n    result[i] = running;\n}",
+    "imports": "None; result is long[n]",
+    "cost": "O(updates + n) time; O(n) space",
+    "mistake": "Inclusive [l,r] ends at r+1. Large sparse coordinates need ordered event maps.",
+    "diagram": "+value at left → constant contribution → −value after right",
+    "applies": "370"
+  },
+  {
+    "id": 9,
+    "name": "Monotonic Stack",
+    "group": "Stacks & queues",
+    "problems": [
+      {
+        "id": 739,
+        "slug": "daily-temperatures",
+        "title": "Daily Temperatures"
+      },
+      {
+        "id": 496,
+        "slug": "next-greater-element-i",
+        "title": "Next Greater Element I"
+      },
+      {
+        "id": 503,
+        "slug": "next-greater-element-ii",
+        "title": "Next Greater Element Ii"
+      },
+      {
+        "id": 84,
+        "slug": "largest-rectangle-in-histogram",
+        "title": "Largest Rectangle In Histogram"
+      },
+      {
+        "id": 85,
+        "slug": "maximal-rectangle",
+        "title": "Maximal Rectangle"
+      },
+      {
+        "id": 901,
+        "slug": "online-stock-span",
+        "title": "Online Stock Span"
+      }
+    ],
+    "when": "Find the nearest larger or smaller value on one side.",
+    "naive": "Scan to the right independently for each index.",
+    "why": "Unresolved indices stay in order; each is pushed and popped at most once.",
+    "example": "Temperatures [73,74,75,71] → waits [1,1,0,0]",
+    "code": "Deque<Integer> stack = new ArrayDeque<>();\nfor (int i = 0; i < t.length; i++) {\n    while (!stack.isEmpty() && t[stack.peek()] < t[i]) {\n        int j = stack.pop();\n        answer[j] = i - j;\n    }\n    stack.push(i);\n}",
+    "imports": "java.util.Deque, java.util.ArrayDeque",
+    "cost": "O(n) time; O(n) space",
+    "mistake": "Store indices when distances matter. Equal values need a deliberate comparison rule.",
+    "diagram": "unresolved [75,71] → 76 arrives → pop 71 → pop 75",
+    "applies": "739"
+  },
+  {
+    "id": 10,
+    "name": "Monotonic Queue / Deque",
+    "group": "Stacks & queues",
+    "problems": [
+      {
+        "id": 239,
+        "slug": "sliding-window-maximum",
+        "title": "Sliding Window Maximum"
+      },
+      {
+        "id": 862,
+        "slug": "shortest-subarray-with-sum-at-least-k",
+        "title": "Shortest Subarray With Sum At Least K"
+      },
+      {
+        "id": 1425,
+        "slug": "constrained-subsequence-sum",
+        "title": "Constrained Subsequence Sum"
+      },
+      {
+        "id": 1438,
+        "slug": "longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit",
+        "title": "Longest Continuous Subarray With Absolute Diff Less Than Or Equal To Limit"
+      },
+      {
+        "id": 1499,
+        "slug": "max-value-of-equation",
+        "title": "Max Value Of Equation"
+      },
+      {
+        "id": 1696,
+        "slug": "jump-game-vi",
+        "title": "Jump Game Vi"
+      }
+    ],
+    "when": "A moving range needs its best candidate without rescanning.",
+    "naive": "Scan all k values for every sliding-window maximum.",
+    "why": "Discard weaker older candidates; evict indices that leave the window.",
+    "example": "[1,3,-1,-3,5], k=3 → maxima [3,3,5]",
+    "code": "Deque<Integer> dq = new ArrayDeque<>();\nfor (int i = 0; i < a.length; i++) {\n    while (!dq.isEmpty() && dq.peekFirst() <= i - k) dq.pollFirst();\n    while (!dq.isEmpty() && a[dq.peekLast()] <= a[i]) dq.pollLast();\n    dq.offerLast(i);\n    if (i >= k - 1) answer[i - k + 1] = a[dq.peekFirst()];\n}",
+    "imports": "java.util.Deque, java.util.ArrayDeque",
+    "cost": "O(n) time; O(k) space for window maximum",
+    "mistake": "Use indices to expire candidates. LC 862 uses a deque of prefix sums, not raw values.",
+    "diagram": "front = maximum → descending candidates → back = newest",
+    "applies": "239"
+  },
+  {
+    "id": 11,
+    "name": "Heap / Top K",
+    "group": "Stacks & queues",
+    "problems": [
+      {
+        "id": 215,
+        "slug": "kth-largest-element-in-an-array",
+        "title": "Kth Largest Element In An Array"
+      },
+      {
+        "id": 347,
+        "slug": "top-k-frequent-elements",
+        "title": "Top K Frequent Elements"
+      },
+      {
+        "id": 692,
+        "slug": "top-k-frequent-words",
+        "title": "Top K Frequent Words"
+      },
+      {
+        "id": 703,
+        "slug": "kth-largest-element-in-a-stream",
+        "title": "Kth Largest Element In A Stream"
+      },
+      {
+        "id": 973,
+        "slug": "k-closest-points-to-origin",
+        "title": "K Closest Points To Origin"
+      },
+      {
+        "id": 1046,
+        "slug": "last-stone-weight",
+        "title": "Last Stone Weight"
+      }
+    ],
+    "when": "Repeatedly retrieve an extreme or retain a small best set.",
+    "naive": "Sort all n values even when only k are needed.",
+    "why": "A size-k min heap discards values too small to remain among the k largest.",
+    "example": "[3,2,1,5,6,4], k=2 → retain [5,6], kth largest=5",
+    "code": "PriorityQueue<Integer> heap = new PriorityQueue<>();\nfor (int x : nums) {\n    heap.offer(x);\n    if (heap.size() > k) heap.poll();\n}\nint kthLargest = heap.element();",
+    "imports": "java.util.PriorityQueue",
+    "cost": "O(n log k) time; O(k) space",
+    "mistake": "Require 1 ≤ k ≤ n. Heap iteration is not sorted; comparator ties can affect top-word problems.",
+    "diagram": "insert → size exceeds k? → remove smallest → retain top k",
+    "applies": "215"
+  },
+  {
+    "id": 12,
+    "name": "Intervals",
+    "group": "Sorting & greedy",
+    "problems": [
+      {
+        "id": 56,
+        "slug": "merge-intervals",
+        "title": "Merge Intervals"
+      },
+      {
+        "id": 57,
+        "slug": "insert-interval",
+        "title": "Insert Interval"
+      },
+      {
+        "id": 252,
+        "slug": "meeting-rooms",
+        "title": "Meeting Rooms"
+      },
+      {
+        "id": 253,
+        "slug": "meeting-rooms-ii",
+        "title": "Meeting Rooms Ii"
+      },
+      {
+        "id": 435,
+        "slug": "non-overlapping-intervals",
+        "title": "Non Overlapping Intervals"
+      },
+      {
+        "id": 452,
+        "slug": "minimum-number-of-arrows-to-burst-balloons",
+        "title": "Minimum Number Of Arrows To Burst Balloons"
+      }
+    ],
+    "when": "Ranges overlap, compete for resources, or must be merged.",
+    "naive": "Compare every interval with every other interval.",
+    "why": "Sorting makes overlap decisions local to neighboring ranges.",
+    "example": "[1,3], [2,6], [8,10] → [1,6], [8,10]",
+    "code": "Arrays.sort(intervals, Comparator.comparingInt(x -> x[0]));\nList<int[]> merged = new ArrayList<>();\nfor (int[] x : intervals) {\n    if (merged.isEmpty() || merged.get(merged.size()-1)[1] < x[0])\n        merged.add(x.clone());\n    else {\n        int[] last = merged.get(merged.size()-1);\n        last[1] = Math.max(last[1], x[1]);\n    }\n}",
+    "imports": "java.util.Arrays, java.util.Comparator, java.util.List, java.util.ArrayList",
+    "cost": "O(n log n) time; O(n) output space",
+    "mistake": "Touching endpoints merge for closed intervals; meeting schedules often use half-open intervals.",
+    "diagram": "sort by start → overlap? → extend previous end → otherwise append",
+    "applies": "56"
+  },
+  {
+    "id": 13,
+    "name": "Greedy Scheduling / Sorting",
+    "group": "Sorting & greedy",
+    "problems": [
+      {
+        "id": 45,
+        "slug": "jump-game-ii",
+        "title": "Jump Game Ii"
+      },
+      {
+        "id": 55,
+        "slug": "jump-game",
+        "title": "Jump Game"
+      },
+      {
+        "id": 406,
+        "slug": "queue-reconstruction-by-height",
+        "title": "Queue Reconstruction By Height"
+      },
+      {
+        "id": 621,
+        "slug": "task-scheduler",
+        "title": "Task Scheduler"
+      },
+      {
+        "id": 763,
+        "slug": "partition-labels",
+        "title": "Partition Labels"
+      },
+      {
+        "id": 134,
+        "slug": "gas-station",
+        "title": "Gas Station"
+      }
+    ],
+    "when": "A local choice can be proved to preserve a globally feasible solution.",
+    "naive": "Explore every sequence of decisions.",
+    "why": "Maintain the strongest reachable frontier instead of all possible paths.",
+    "example": "[2,3,1,1,4] → last index is reachable",
+    "code": "int farthest = 0;\nfor (int i = 0; i < nums.length; i++) {\n    if (i > farthest) return false;\n    farthest = Math.max(farthest, i + nums[i]);\n}\nreturn true;",
+    "imports": "None",
+    "cost": "O(n) time; O(1) space for Jump Game",
+    "mistake": "Greedy needs a proof; a locally largest value is not automatically optimal.",
+    "diagram": "reachable frontier → process reachable index → extend frontier",
+    "applies": "55"
+  },
+  {
+    "id": 14,
+    "name": "Linked List Manipulation",
+    "group": "Linked lists",
+    "problems": [
+      {
+        "id": 21,
+        "slug": "merge-two-sorted-lists",
+        "title": "Merge Two Sorted Lists"
+      },
+      {
+        "id": 23,
+        "slug": "merge-k-sorted-lists",
+        "title": "Merge K Sorted Lists"
+      },
+      {
+        "id": 24,
+        "slug": "swap-nodes-in-pairs",
+        "title": "Swap Nodes In Pairs"
+      },
+      {
+        "id": 25,
+        "slug": "reverse-nodes-in-k-group",
+        "title": "Reverse Nodes In K Group"
+      },
+      {
+        "id": 92,
+        "slug": "reverse-linked-list-ii",
+        "title": "Reverse Linked List Ii"
+      },
+      {
+        "id": 138,
+        "slug": "copy-list-with-random-pointer",
+        "title": "Copy List With Random Pointer"
+      }
+    ],
+    "when": "Rewire nodes while preserving access to the unprocessed suffix.",
+    "naive": "Copy all values into a separate array and rebuild nodes.",
+    "why": "Save next before redirecting a pointer; dummy heads simplify boundary cases.",
+    "example": "1 → 2 → 3 → null becomes 3 → 2 → 1 → null",
+    "code": "ListNode prev = null, cur = head;\nwhile (cur != null) {\n    ListNode next = cur.next;\n    cur.next = prev;\n    prev = cur;\n    cur = next;\n}\nreturn prev;",
+    "imports": "None; ListNode is supplied by the problem",
+    "cost": "O(n) time; O(1) space for full reversal",
+    "mistake": "Save cur.next before overwriting it. Sublist and k-group variants must reconnect both ends.",
+    "diagram": "prev ← cur   next → suffix → save next → reverse link → advance",
+    "applies": "92 (reversal primitive)"
+  },
+  {
+    "id": 15,
+    "name": "Tree DFS",
+    "group": "Trees",
+    "problems": [
+      {
+        "id": 104,
+        "slug": "maximum-depth-of-binary-tree",
+        "title": "Maximum Depth Of Binary Tree"
+      },
+      {
+        "id": 112,
+        "slug": "path-sum",
+        "title": "Path Sum"
+      },
+      {
+        "id": 113,
+        "slug": "path-sum-ii",
+        "title": "Path Sum Ii"
+      },
+      {
+        "id": 543,
+        "slug": "diameter-of-binary-tree",
+        "title": "Diameter Of Binary Tree"
+      },
+      {
+        "id": 124,
+        "slug": "binary-tree-maximum-path-sum",
+        "title": "Binary Tree Maximum Path Sum"
+      },
+      {
+        "id": 226,
+        "slug": "invert-binary-tree",
+        "title": "Invert Binary Tree"
+      }
+    ],
+    "when": "A subtree can return a summary to its parent.",
+    "naive": "Recompute subtree heights separately at every node.",
+    "why": "Postorder computes each child summary once before combining at the parent.",
+    "example": "Root with two leaf children → depth 2",
+    "code": "int depth(TreeNode node) {\n    if (node == null) return 0;\n    int left = depth(node.left);\n    int right = depth(node.right);\n    return 1 + Math.max(left, right);\n}",
+    "imports": "None; TreeNode is supplied by the problem",
+    "cost": "O(n) time; O(h) call-stack space",
+    "mistake": "Distinguish values returned upward from a global best path. Skewed trees can overflow recursion.",
+    "diagram": "left summary ↘ parent combines ↙ right summary → return upward",
+    "applies": "104"
+  },
+  {
+    "id": 16,
+    "name": "Tree BFS / Level Order",
+    "group": "Trees",
+    "problems": [
+      {
+        "id": 102,
+        "slug": "binary-tree-level-order-traversal",
+        "title": "Binary Tree Level Order Traversal"
+      },
+      {
+        "id": 103,
+        "slug": "binary-tree-zigzag-level-order-traversal",
+        "title": "Binary Tree Zigzag Level Order Traversal"
+      },
+      {
+        "id": 199,
+        "slug": "binary-tree-right-side-view",
+        "title": "Binary Tree Right Side View"
+      },
+      {
+        "id": 515,
+        "slug": "find-largest-value-in-each-tree-row",
+        "title": "Find Largest Value In Each Tree Row"
+      },
+      {
+        "id": 637,
+        "slug": "average-of-levels-in-binary-tree",
+        "title": "Average Of Levels In Binary Tree"
+      },
+      {
+        "id": 116,
+        "slug": "populating-next-right-pointers-in-each-node",
+        "title": "Populating Next Right Pointers In Each Node"
+      }
+    ],
+    "when": "Process nodes in increasing depth or aggregate by level.",
+    "naive": "Traverse the tree again for every requested depth.",
+    "why": "A FIFO queue groups nodes by distance from the root.",
+    "example": "[3,9,20,null,null,15,7] → [[3],[9,20],[15,7]]",
+    "code": "Queue<TreeNode> q = new ArrayDeque<>();\nif (root != null) q.offer(root);\nwhile (!q.isEmpty()) {\n    int size = q.size();\n    List<Integer> level = new ArrayList<>();\n    for (int i = 0; i < size; i++) {\n        TreeNode x = q.poll(); level.add(x.val);\n        if (x.left != null) q.offer(x.left);\n        if (x.right != null) q.offer(x.right);\n    }\n    levels.add(level);\n}",
+    "imports": "java.util.Queue, java.util.ArrayDeque, java.util.List, java.util.ArrayList",
+    "cost": "O(n) time; O(w) queue space, plus output",
+    "mistake": "Capture queue size before processing a level. ArrayDeque does not accept null.",
+    "diagram": "root → queue [level 1] → queue [level 2] → queue [level 3]",
+    "applies": "102"
+  },
+  {
+    "id": 17,
+    "name": "BST Problems",
+    "group": "Trees",
+    "problems": [
+      {
+        "id": 98,
+        "slug": "validate-binary-search-tree",
+        "title": "Validate Binary Search Tree"
+      },
+      {
+        "id": 99,
+        "slug": "recover-binary-search-tree",
+        "title": "Recover Binary Search Tree"
+      },
+      {
+        "id": 230,
+        "slug": "kth-smallest-element-in-a-bst",
+        "title": "Kth Smallest Element In A Bst"
+      },
+      {
+        "id": 235,
+        "slug": "lowest-common-ancestor-of-a-binary-search-tree",
+        "title": "Lowest Common Ancestor Of A Binary Search Tree"
+      },
+      {
+        "id": 450,
+        "slug": "delete-node-in-a-bst",
+        "title": "Delete Node In A Bst"
+      },
+      {
+        "id": 700,
+        "slug": "search-in-a-binary-search-tree",
+        "title": "Search In A Binary Search Tree"
+      }
+    ],
+    "when": "Left values are smaller and right values are larger under the problem’s BST policy.",
+    "naive": "Visit every node when searching for a value.",
+    "why": "The ordering rule eliminates one entire subtree per comparison.",
+    "example": "BST root 4, left 2, right 7; target 2 → visit 4 then 2",
+    "code": "TreeNode cur = root;\nwhile (cur != null && cur.val != target)\n    cur = target < cur.val ? cur.left : cur.right;\nreturn cur;",
+    "imports": "None; TreeNode is supplied by the problem",
+    "cost": "O(h) time; O(1) extra space for iterative search",
+    "mistake": "A BST need not be balanced: h can be n. Validation needs ancestor bounds, not just child comparisons.",
+    "diagram": "target < node → left subtree | target > node → right subtree",
+    "applies": "700"
+  },
+  {
+    "id": 18,
+    "name": "Backtracking Basics",
+    "group": "Recursion & search",
+    "problems": [
+      {
+        "id": 46,
+        "slug": "permutations",
+        "title": "Permutations"
+      },
+      {
+        "id": 47,
+        "slug": "permutations-ii",
+        "title": "Permutations Ii"
+      },
+      {
+        "id": 77,
+        "slug": "combinations",
+        "title": "Combinations"
+      },
+      {
+        "id": 78,
+        "slug": "subsets",
+        "title": "Subsets"
+      },
+      {
+        "id": 90,
+        "slug": "subsets-ii",
+        "title": "Subsets Ii"
+      },
+      {
+        "id": 39,
+        "slug": "combination-sum",
+        "title": "Combination Sum"
+      }
+    ],
+    "when": "Enumerate combinations by building and undoing a partial choice.",
+    "naive": "Generate all sequences, then filter invalid ones.",
+    "why": "The recursion tree encodes choices; undo restores state for the next branch.",
+    "example": "[1,2] → [], [1], [1,2], [2]",
+    "code": "void subsets(int[] a, int start, List<Integer> path,\n             List<List<Integer>> out) {\n    out.add(new ArrayList<>(path));\n    for (int i = start; i < a.length; i++) {\n        path.add(a[i]);\n        subsets(a, i + 1, path, out);\n        path.remove(path.size() - 1);\n    }\n}",
+    "imports": "java.util.List, java.util.ArrayList",
+    "cost": "O(n·2^n) time including copies; O(n) auxiliary space plus output",
+    "mistake": "Copy the path when saving it. Duplicate values require sorting and same-depth duplicate skipping.",
+    "diagram": "choose → recurse → undo → choose next → recurse → undo",
+    "applies": "78"
+  },
+  {
+    "id": 19,
+    "name": "Backtracking with Constraints",
+    "group": "Recursion & search",
+    "problems": [
+      {
+        "id": 40,
+        "slug": "combination-sum-ii",
+        "title": "Combination Sum Ii"
+      },
+      {
+        "id": 17,
+        "slug": "letter-combinations-of-a-phone-number",
+        "title": "Letter Combinations Of A Phone Number"
+      },
+      {
+        "id": 79,
+        "slug": "word-search",
+        "title": "Word Search"
+      },
+      {
+        "id": 131,
+        "slug": "palindrome-partitioning",
+        "title": "Palindrome Partitioning"
+      },
+      {
+        "id": 51,
+        "slug": "n-queens",
+        "title": "N Queens"
+      },
+      {
+        "id": 52,
+        "slug": "n-queens-ii",
+        "title": "N Queens Ii"
+      }
+    ],
+    "when": "A partial solution can be rejected before all choices are made.",
+    "naive": "Construct every complete arrangement and validate at the end.",
+    "why": "Prune branches immediately when a constraint is violated.",
+    "example": "4 queens → 2 valid boards; a repeated column is rejected immediately",
+    "code": "void place(int row) {\n    if (row == n) { count++; return; }\n    for (int col = 0; col < n; col++) {\n        int a = row + col, b = row - col + n - 1;\n        if (cols[col] || diag1[a] || diag2[b]) continue;\n        cols[col] = diag1[a] = diag2[b] = true;\n        place(row + 1);\n        cols[col] = diag1[a] = diag2[b] = false;\n    }\n}",
+    "imports": "None; boolean arrays cols[n], diag1[2*n-1], diag2[2*n-1]; count starts at 0",
+    "cost": "Exponential search; O(n) auxiliary state for N-Queens",
+    "mistake": "Undo every changed constraint. State belongs to the current branch, not all branches globally.",
+    "diagram": "partial board → conflict? prune × → safe? recurse ↓ → undo",
+    "applies": "52"
+  },
+  {
+    "id": 20,
+    "name": "Graph BFS / DFS",
+    "group": "Graphs",
+    "problems": [
+      {
+        "id": 200,
+        "slug": "number-of-islands",
+        "title": "Number Of Islands"
+      },
+      {
+        "id": 695,
+        "slug": "max-area-of-island",
+        "title": "Max Area Of Island"
+      },
+      {
+        "id": 733,
+        "slug": "flood-fill",
+        "title": "Flood Fill"
+      },
+      {
+        "id": 994,
+        "slug": "rotting-oranges",
+        "title": "Rotting Oranges"
+      },
+      {
+        "id": 1091,
+        "slug": "shortest-path-in-binary-matrix",
+        "title": "Shortest Path In Binary Matrix"
+      },
+      {
+        "id": 1254,
+        "slug": "number-of-closed-islands",
+        "title": "Number Of Closed Islands"
+      }
+    ],
+    "when": "Explore connected components or shortest distances in an unweighted graph.",
+    "naive": "Repeatedly search the same connected region from every vertex.",
+    "why": "Mark vertices when discovered so each is processed once.",
+    "example": "Edges 0–1, 1–2; BFS from 0 visits 0,1,2 at distances 0,1,2",
+    "code": "Queue<Integer> q = new ArrayDeque<>();\nvisited[start] = true; q.offer(start);\nwhile (!q.isEmpty()) {\n    int u = q.poll();\n    for (int v : graph[u]) {\n        if (visited[v]) continue;\n        visited[v] = true;\n        q.offer(v);\n    }\n}",
+    "imports": "java.util.Queue, java.util.ArrayDeque; adjacency lists graph",
+    "cost": "O(V+E) time; O(V) space",
+    "mistake": "Mark on enqueue, not dequeue. Grid bounds and four versus eight directions depend on the problem.",
+    "diagram": "start → discover neighbors → mark → enqueue → next frontier",
+    "applies": "200 (grid-as-graph primitive)"
+  },
+  {
+    "id": 21,
+    "name": "Topological Sort / DAG",
+    "group": "Graphs",
+    "problems": [
+      {
+        "id": 207,
+        "slug": "course-schedule",
+        "title": "Course Schedule"
+      },
+      {
+        "id": 210,
+        "slug": "course-schedule-ii",
+        "title": "Course Schedule Ii"
+      },
+      {
+        "id": 802,
+        "slug": "find-eventual-safe-states",
+        "title": "Find Eventual Safe States"
+      },
+      {
+        "id": 1462,
+        "slug": "course-schedule-iv",
+        "title": "Course Schedule Iv"
+      },
+      {
+        "id": 1203,
+        "slug": "sort-items-by-groups-respecting-dependencies",
+        "title": "Sort Items By Groups Respecting Dependencies"
+      },
+      {
+        "id": 2115,
+        "slug": "find-all-possible-recipes-from-given-supplies",
+        "title": "Find All Possible Recipes From Given Supplies"
+      }
+    ],
+    "when": "Directed prerequisites constrain the order of processing.",
+    "naive": "Try every possible ordering and validate dependencies.",
+    "why": "Remove zero-indegree vertices; their dependents may then become ready.",
+    "example": "0 → 1 → 2 produces order [0,1,2]",
+    "code": "Queue<Integer> q = new ArrayDeque<>();\nfor (int i = 0; i < n; i++) if (indegree[i] == 0) q.offer(i);\nint processed = 0;\nwhile (!q.isEmpty()) {\n    int u = q.poll(); order[processed++] = u;\n    for (int v : graph[u]) if (--indegree[v] == 0) q.offer(v);\n}\nboolean acyclic = processed == n;",
+    "imports": "java.util.Queue, java.util.ArrayDeque",
+    "cost": "O(V+E) time; O(V) auxiliary space",
+    "mistake": "Direction matters: prerequisite → dependent. Fewer than n processed vertices means a cycle.",
+    "diagram": "indegree 0 → ready queue → remove outgoing edges → unlock dependents",
+    "applies": "210"
+  },
+  {
+    "id": 22,
+    "name": "Union Find / DSU",
+    "group": "Graphs",
+    "problems": [
+      {
+        "id": 547,
+        "slug": "number-of-provinces",
+        "title": "Number Of Provinces"
+      },
+      {
+        "id": 684,
+        "slug": "redundant-connection",
+        "title": "Redundant Connection"
+      },
+      {
+        "id": 1319,
+        "slug": "number-of-operations-to-make-network-connected",
+        "title": "Number Of Operations To Make Network Connected"
+      },
+      {
+        "id": 1579,
+        "slug": "remove-max-number-of-edges-to-keep-graph-fully-traversable",
+        "title": "Remove Max Number Of Edges To Keep Graph Fully Traversable"
+      },
+      {
+        "id": 990,
+        "slug": "satisfiability-of-equality-equations",
+        "title": "Satisfiability Of Equality Equations"
+      },
+      {
+        "id": 1202,
+        "slug": "smallest-string-with-swaps",
+        "title": "Smallest String With Swaps"
+      }
+    ],
+    "when": "Connectivity changes as undirected edges are added.",
+    "naive": "Run a graph traversal after every new edge.",
+    "why": "Represent each component by a root; compression and size-based union keep trees shallow.",
+    "example": "union(0,1), union(1,2) → find(0)==find(2)",
+    "code": "int find(int x) {\n    if (parent[x] != x) parent[x] = find(parent[x]);\n    return parent[x];\n}\nvoid union(int a, int b) {\n    a = find(a); b = find(b);\n    if (a == b) return;\n    if (size[a] < size[b]) { int t = a; a = b; b = t; }\n    parent[b] = a; size[a] += size[b];\n}",
+    "imports": "None; initialize parent[i]=i and size[i]=1",
+    "cost": "O(α(n)) amortized per operation; O(n) space",
+    "mistake": "Compare roots before joining. DSU does not directly support edge deletion or directed reachability.",
+    "diagram": "each node → representative root → union smaller tree under larger root",
+    "applies": "547"
+  },
+  {
+    "id": 23,
+    "name": "Shortest Path",
+    "group": "Graphs",
+    "problems": [
+      {
+        "id": 743,
+        "slug": "network-delay-time",
+        "title": "Network Delay Time"
+      },
+      {
+        "id": 787,
+        "slug": "cheapest-flights-within-k-stops",
+        "title": "Cheapest Flights Within K Stops"
+      },
+      {
+        "id": 1514,
+        "slug": "path-with-maximum-probability",
+        "title": "Path With Maximum Probability"
+      },
+      {
+        "id": 1631,
+        "slug": "path-with-minimum-effort",
+        "title": "Path With Minimum Effort"
+      },
+      {
+        "id": 1334,
+        "slug": "find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance",
+        "title": "Find The City With The Smallest Number Of Neighbors At A Threshold Distance"
+      },
+      {
+        "id": 1976,
+        "slug": "number-of-ways-to-arrive-at-destination",
+        "title": "Number Of Ways To Arrive At Destination"
+      }
+    ],
+    "when": "Find a minimum-cost path with nonnegative edge weights.",
+    "naive": "Enumerate all paths or repeatedly scan every unsettled vertex.",
+    "why": "Dijkstra expands the cheapest known unsettled state using a priority queue.",
+    "example": "0→1 costs 2, 0→2 costs 5, 1→2 costs 1 → distance to 2 is 3",
+    "code": "PriorityQueue<long[]> pq = new PriorityQueue<>(Comparator.comparingLong(x -> x[0]));\nArrays.fill(dist, Long.MAX_VALUE); dist[source] = 0;\npq.offer(new long[]{0, source});\nwhile (!pq.isEmpty()) {\n    long[] state = pq.poll(); int u = (int) state[1];\n    if (state[0] != dist[u]) continue;\n    for (int[] edge : graph[u]) {\n        int v = edge[0]; long next = dist[u] + edge[1];\n        if (next < dist[v]) {\n            dist[v] = next; pq.offer(new long[]{next, v});\n        }\n    }\n}",
+    "imports": "java.util.PriorityQueue, java.util.Comparator, java.util.Arrays; long[] dist",
+    "cost": "O((V+E) log V) time for a simple graph; O(V+E) space",
+    "mistake": "Negative edges break Dijkstra. LC 787 must track stops; ordinary node-only Dijkstra is insufficient.",
+    "diagram": "source 0 → cheapest frontier 2 → relax edge +1 → destination 3",
+    "applies": "743"
+  },
+  {
+    "id": 24,
+    "name": "MST / Graph Greedy",
+    "group": "Graphs",
+    "problems": [
+      {
+        "id": 1584,
+        "slug": "min-cost-to-connect-all-points",
+        "title": "Min Cost To Connect All Points"
+      },
+      {
+        "id": 1135,
+        "slug": "connecting-cities-with-minimum-cost",
+        "title": "Connecting Cities With Minimum Cost"
+      },
+      {
+        "id": 1168,
+        "slug": "optimize-water-distribution-in-a-village",
+        "title": "Optimize Water Distribution In A Village"
+      },
+      {
+        "id": 1489,
+        "slug": "find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree",
+        "title": "Find Critical And Pseudo Critical Edges In Minimum Spanning Tree"
+      },
+      {
+        "id": 778,
+        "slug": "swim-in-rising-water",
+        "title": "Swim In Rising Water"
+      },
+      {
+        "id": 1102,
+        "slug": "path-with-maximum-minimum-value",
+        "title": "Path With Maximum Minimum Value"
+      }
+    ],
+    "when": "Connect all vertices as cheaply as possible, or grow connectivity in weight order.",
+    "naive": "Enumerate spanning trees and compare total costs.",
+    "why": "Kruskal takes the cheapest edge that joins two different components.",
+    "example": "Triangle weights 1,2,5 → choose 1 and 2 → MST cost 3",
+    "code": "Arrays.sort(edges, Comparator.comparingInt(e -> e[2]));\nlong cost = 0; int used = 0;\nfor (int[] e : edges) {\n    if (find(e[0]) == find(e[1])) continue;\n    union(e[0], e[1]); cost += e[2]; used++;\n}\nboolean connected = used == n - 1;",
+    "imports": "java.util.Arrays, java.util.Comparator; DSU find/union from pattern 22",
+    "cost": "O(E log E) time; O(V) DSU space, plus sorting",
+    "mistake": "MST is not a shortest-path tree. LC 778 and 1102 are bottleneck connectivity variants.",
+    "diagram": "sort edges by cost → join different components → stop after V−1 joins",
+    "applies": "1135"
+  },
+  {
+    "id": 25,
+    "name": "Trie",
+    "group": "Trees",
+    "problems": [
+      {
+        "id": 208,
+        "slug": "implement-trie-prefix-tree",
+        "title": "Implement Trie Prefix Tree"
+      },
+      {
+        "id": 211,
+        "slug": "design-add-and-search-words-data-structure",
+        "title": "Design Add And Search Words Data Structure"
+      },
+      {
+        "id": 212,
+        "slug": "word-search-ii",
+        "title": "Word Search Ii"
+      },
+      {
+        "id": 648,
+        "slug": "replace-words",
+        "title": "Replace Words"
+      },
+      {
+        "id": 677,
+        "slug": "map-sum-pairs",
+        "title": "Map Sum Pairs"
+      },
+      {
+        "id": 1268,
+        "slug": "search-suggestions-system",
+        "title": "Search Suggestions System"
+      }
+    ],
+    "when": "Many words share prefixes and queries follow characters from the start.",
+    "naive": "Scan every word for each prefix query.",
+    "why": "A prefix tree shares common character paths.",
+    "example": "Insert cat and car → shared c→a, then branch t / r",
+    "code": "static class Node {\n    Node[] child = new Node[26];\n    boolean end;\n}\nvoid insert(String word) {\n    Node cur = root;\n    for (char c : word.toCharArray()) {\n        int i = c - 'a';\n        if (cur.child[i] == null) cur.child[i] = new Node();\n        cur = cur.child[i];\n    }\n    cur.end = true;\n}",
+    "imports": "None; Node root = new Node()",
+    "cost": "O(L) insertion/query; O(total inserted characters × alphabet) worst-case storage",
+    "mistake": "This array implementation assumes lowercase a–z. A prefix node is not necessarily a complete word.",
+    "diagram": "root → c → a ↗ t(end) / ↘ r(end)",
+    "applies": "208"
+  },
+  {
+    "id": 26,
+    "name": "Bit Manipulation",
+    "group": "Bits & dynamic programming",
+    "problems": [
+      {
+        "id": 136,
+        "slug": "single-number",
+        "title": "Single Number"
+      },
+      {
+        "id": 137,
+        "slug": "single-number-ii",
+        "title": "Single Number Ii"
+      },
+      {
+        "id": 191,
+        "slug": "number-of-1-bits",
+        "title": "Number Of 1 Bits"
+      },
+      {
+        "id": 338,
+        "slug": "counting-bits",
+        "title": "Counting Bits"
+      },
+      {
+        "id": 268,
+        "slug": "missing-number",
+        "title": "Missing Number"
+      },
+      {
+        "id": 190,
+        "slug": "reverse-bits",
+        "title": "Reverse Bits"
+      }
+    ],
+    "when": "Information can be encoded or canceled bit by bit.",
+    "naive": "Use a frequency map to find the value occurring once.",
+    "why": "XOR cancels pairs because x XOR x = 0 and x XOR 0 = x.",
+    "example": "[4,1,2,1,2] → XOR all values → 4",
+    "code": "int answer = 0;\nfor (int x : nums) answer ^= x;",
+    "imports": "None",
+    "cost": "O(n) time; O(1) space for paired duplicates",
+    "mistake": "This XOR trick requires all other values to appear twice. LC 137 needs per-bit counts or a state machine.",
+    "diagram": "4 ⊕ 1 ⊕ 2 ⊕ 1 ⊕ 2 → 4 ⊕ 0 ⊕ 0 → 4",
+    "applies": "136"
+  },
+  {
+    "id": 27,
+    "name": "1D DP Basics",
+    "group": "Bits & dynamic programming",
+    "problems": [
+      {
+        "id": 70,
+        "slug": "climbing-stairs",
+        "title": "Climbing Stairs"
+      },
+      {
+        "id": 198,
+        "slug": "house-robber",
+        "title": "House Robber"
+      },
+      {
+        "id": 213,
+        "slug": "house-robber-ii",
+        "title": "House Robber Ii"
+      },
+      {
+        "id": 322,
+        "slug": "coin-change",
+        "title": "Coin Change"
+      },
+      {
+        "id": 279,
+        "slug": "perfect-squares",
+        "title": "Perfect Squares"
+      },
+      {
+        "id": 300,
+        "slug": "longest-increasing-subsequence",
+        "title": "Longest Increasing Subsequence"
+      }
+    ],
+    "when": "A one-dimensional state summarizes smaller overlapping subproblems.",
+    "naive": "Recursively recompute the same prefix solutions.",
+    "why": "Store each state once, then build larger answers from known states.",
+    "example": "House values [2,7,9,3,1] → maximum nonadjacent sum 12",
+    "code": "int prev2 = 0, prev1 = 0;\nfor (int value : nums) {\n    int current = Math.max(prev1, prev2 + value);\n    prev2 = prev1;\n    prev1 = current;\n}\nreturn prev1;",
+    "imports": "None",
+    "cost": "O(n) time; O(1) space for House Robber",
+    "mistake": "Define the state before coding. Rolling variables must be updated in the correct order.",
+    "diagram": "best[i] = max(skip → best[i−1], take → best[i−2]+value)",
+    "applies": "198"
+  },
+  {
+    "id": 28,
+    "name": "Knapsack / Subset DP",
+    "group": "Bits & dynamic programming",
+    "problems": [
+      {
+        "id": 416,
+        "slug": "partition-equal-subset-sum",
+        "title": "Partition Equal Subset Sum"
+      },
+      {
+        "id": 494,
+        "slug": "target-sum",
+        "title": "Target Sum"
+      },
+      {
+        "id": 518,
+        "slug": "coin-change-ii",
+        "title": "Coin Change Ii"
+      },
+      {
+        "id": 474,
+        "slug": "ones-and-zeroes",
+        "title": "Ones And Zeroes"
+      },
+      {
+        "id": 1049,
+        "slug": "last-stone-weight-ii",
+        "title": "Last Stone Weight Ii"
+      },
+      {
+        "id": 879,
+        "slug": "profitable-schemes",
+        "title": "Profitable Schemes"
+      }
+    ],
+    "when": "Choose items subject to capacity, target sum, or multiple resource limits.",
+    "naive": "Enumerate all subsets of items.",
+    "why": "Merge equivalent partial subsets into a state indexed by capacity.",
+    "example": "[1,5,11,5], target half=11 → reachable → equal partition exists",
+    "code": "boolean[] dp = new boolean[target + 1];\ndp[0] = true;\nfor (int x : nums)\n    for (int sum = target; sum >= x; sum--)\n        dp[sum] |= dp[sum - x];",
+    "imports": "None",
+    "cost": "O(n·target) time; O(target) space for 0/1 subset sum",
+    "mistake": "Iterate capacity downward for one use per item. Unbounded coin combinations use ascending capacity.",
+    "diagram": "item → [reachable sums] → update backward → avoid reusing item",
+    "applies": "416"
+  },
+  {
+    "id": 29,
+    "name": "Grid DP",
+    "group": "Bits & dynamic programming",
+    "problems": [
+      {
+        "id": 62,
+        "slug": "unique-paths",
+        "title": "Unique Paths"
+      },
+      {
+        "id": 63,
+        "slug": "unique-paths-ii",
+        "title": "Unique Paths Ii"
+      },
+      {
+        "id": 64,
+        "slug": "minimum-path-sum",
+        "title": "Minimum Path Sum"
+      },
+      {
+        "id": 221,
+        "slug": "maximal-square",
+        "title": "Maximal Square"
+      },
+      {
+        "id": 931,
+        "slug": "minimum-falling-path-sum",
+        "title": "Minimum Falling Path Sum"
+      },
+      {
+        "id": 120,
+        "slug": "triangle",
+        "title": "Triangle"
+      }
+    ],
+    "when": "A cell depends on already solved neighboring cells in an acyclic direction.",
+    "naive": "Enumerate every path through the grid.",
+    "why": "Combine predecessor answers once per cell.",
+    "example": "3 rows × 7 columns, right/down moves → 28 unique paths",
+    "code": "int[] dp = new int[cols];\nArrays.fill(dp, 1);\nfor (int row = 1; row < rows; row++)\n    for (int col = 1; col < cols; col++)\n        dp[col] += dp[col - 1];\nreturn dp[cols - 1];",
+    "imports": "java.util.Arrays; rows and cols must be positive",
+    "cost": "O(rows·cols) time; O(cols) space",
+    "mistake": "Initialize boundaries deliberately. Obstacles need dp[col]=0; path counts may require wider integers.",
+    "diagram": "from above ↓ + from left → current cell → continue row by row",
+    "applies": "62"
+  },
+  {
+    "id": 30,
+    "name": "String DP / Sequence DP",
+    "group": "Bits & dynamic programming",
+    "problems": [
+      {
+        "id": 1143,
+        "slug": "longest-common-subsequence",
+        "title": "Longest Common Subsequence"
+      },
+      {
+        "id": 72,
+        "slug": "edit-distance",
+        "title": "Edit Distance"
+      },
+      {
+        "id": 115,
+        "slug": "distinct-subsequences",
+        "title": "Distinct Subsequences"
+      },
+      {
+        "id": 583,
+        "slug": "delete-operation-for-two-strings",
+        "title": "Delete Operation For Two Strings"
+      },
+      {
+        "id": 97,
+        "slug": "interleaving-string",
+        "title": "Interleaving String"
+      },
+      {
+        "id": 1312,
+        "slug": "minimum-insertion-steps-to-make-a-string-palindrome",
+        "title": "Minimum Insertion Steps To Make A String Palindrome"
+      }
+    ],
+    "when": "Two prefixes or an interval describe repeated sequence subproblems.",
+    "naive": "Enumerate all subsequences and compare them.",
+    "why": "A pair of prefix lengths is enough to reuse previously solved comparisons.",
+    "example": "abcde and ace → LCS ace → length 3",
+    "code": "int[][] dp = new int[a.length() + 1][b.length() + 1];\nfor (int i = 1; i <= a.length(); i++)\n    for (int j = 1; j <= b.length(); j++)\n        dp[i][j] = a.charAt(i-1) == b.charAt(j-1)\n            ? dp[i-1][j-1] + 1\n            : Math.max(dp[i-1][j], dp[i][j-1]);\nreturn dp[a.length()][b.length()];",
+    "imports": "None",
+    "cost": "O(mn) time; O(mn) space for LCS",
+    "mistake": "Subsequence allows gaps; substring does not. Empty prefixes belong in the base row and column.",
+    "diagram": "matching chars → diagonal +1 | mismatch → max(up, left)",
+    "applies": "1143"
+  }
+]
