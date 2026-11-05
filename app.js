@@ -59,7 +59,7 @@ function trace(s) {
  }
  push(s.length,`Finished. Longest unique substring length = ${best}.`,'done');return result;
 }
-function renderVisual(p) {
+function renderLegacyVisual(p) {
  if(p.id!==1) {
   $('#panel').innerHTML=`<h3>See the invariant</h3>${diagram(p)}<div class="explain-grid"><div class="card"><p class="card-label">STATE TO TRACK</p><p>${escapeHTML(p.why)}</p></div><div class="card better"><p class="card-label">HAND-TRACE CHALLENGE</p><p>${escapeHTML(p.example)}</p></div></div><p class="notice">This is a conceptual diagram. The step-by-step execution lab is available for Sliding Window / LC 3.</p><a class="btn" href="#pattern-1">Open the sliding-window lab →</a>`;return;
  }
