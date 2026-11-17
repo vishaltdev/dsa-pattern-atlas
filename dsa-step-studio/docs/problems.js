@@ -1,3 +1,4 @@
+import {extraPatterns, extraProblems} from './more-problems.js?v=all-patterns-2';
 const code = (s) => `class Solution {\n${s}\n}`;
 export const patterns={
  'Sliding window':{when:'Use for contiguous subarrays or substrings when you can update a running state as the boundaries move.',invariant:'The state describes exactly the current window. Expand right; shrink left until the window is valid.',caution:'A shrinking sum window usually needs nonnegative values. Negative values can break the monotonic rule.'},
@@ -236,3 +237,6 @@ export const problems=[
         return new int[]{};
     }`)}
 ];
+
+Object.assign(patterns, extraPatterns);
+problems.push(...extraProblems);

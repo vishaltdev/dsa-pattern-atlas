@@ -26,7 +26,7 @@ for name in ['index.html', 'style.css', 'app.js', 'lab-ui.js', 'patterns.json']:
     shutil.copyfile(root / name, out / name)
 # Ship the browser-local Java visualizer beside the pattern atlas.
 studio = root / 'dsa-step-studio'
-subprocess.run(['node', '--test', str(studio / 'tests' / 'engine.test.mjs')], check=True)
+subprocess.run(['node', '--test', *[str(p) for p in sorted((studio / 'tests').glob('*.test.mjs'))]], check=True)
 shutil.copytree(studio / 'docs', out / 'dsa-step-studio', dirs_exist_ok=True)
 (out / '.nojekyll').touch()
 print('Built dist/: 30 patterns, 180 roadmap entries, all required lesson fields validated.')
