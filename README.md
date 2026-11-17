@@ -4,6 +4,12 @@ A responsive Java field guide preserving the original 30-pattern, 180-entry DSA 
 
 **Live site:** https://vishaltdev.github.io/dsa-pattern-atlas/
 
+## Java Step Studio
+
+**Interactive visualizer:** https://vishaltdev.github.io/dsa-pattern-atlas/dsa-step-studio/
+
+Paste supported Java or choose one of 12 sliding-window and two-pointer solutions. Build a trace, step in either direction, inspect variables/pointers and logical stack/heap snapshots, and revise technique notes. Execution and saved drafts stay in each visitor’s browser. See [supported Java and limits](dsa-step-studio/README.md).
+
 ## Explore
 
 - 30 lessons with annotated Java examples, imports, when/why, naive approaches, worked examples, complexity, and mistakes.
@@ -19,7 +25,7 @@ The code snippets are reusable references, not complete solutions to all linked 
 
 ## Build and preview
 
-Python 3 is the only build requirement. The browser application has no JavaScript package dependencies.
+Python 3 and Node.js 18+ are the build requirements. Node runs the visualizer’s 49 interpreter tests; no package installation is needed. The browser application has no JavaScript package dependencies.
 
 ```sh
 python3 build.py
@@ -34,3 +40,4 @@ Open http://localhost:8000/. Do not open index.html directly: the application lo
 ## Content and privacy
 
 The roadmap was recovered from the user's shared DSA Roadmap Planning conversation. The original ZIP was unavailable; this implementation is a reconstruction. Diagrams and annotations were authored for this project. No analytics or account system is included. Progress is stored only in this browser unless exported. Google Fonts supplies optional typography; system fallbacks work if it is unavailable.
+

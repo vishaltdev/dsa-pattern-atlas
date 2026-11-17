@@ -1,5 +1,5 @@
 """Validate and package the dependency-free atlas for GitHub Pages."""
-import json, pathlib, shutil
+import json, pathlib, shutil, subprocess
 from labs import generate
 root = pathlib.Path(__file__).parent
 patterns = json.loads((root / 'patterns.json').read_text())
@@ -24,6 +24,11 @@ for lab in labs:
 (out / 'labs.json').write_text(json.dumps(labs, ensure_ascii=False, separators=(',', ':')))
 for name in ['index.html', 'style.css', 'app.js', 'lab-ui.js', 'patterns.json']:
     shutil.copyfile(root / name, out / name)
+# Ship the browser-local Java visualizer beside the pattern atlas.
+studio = root / 'dsa-step-studio'
+subprocess.run(['node', '--test', str(studio / 'tests' / 'engine.test.mjs')], check=True)
+shutil.copytree(studio / 'docs', out / 'dsa-step-studio', dirs_exist_ok=True)
 (out / '.nojekyll').touch()
 print('Built dist/: 30 patterns, 180 roadmap entries, all required lesson fields validated.')
 print(f"Verified 30 algorithm results and {sum(len(lab['steps']) for lab in labs)} instruction snapshots.")
+
