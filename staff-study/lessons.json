@@ -1,0 +1,491 @@
+[
+  {
+    "id": "safe-retries",
+    "title": "Retries without a retry storm",
+    "company": "AWS",
+    "concepts": [
+      "Reliability",
+      "Distributed systems"
+    ],
+    "technologies": [
+      "HTTP",
+      "Java",
+      "Backoff"
+    ],
+    "url": "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/",
+    "scope": "Partial retrieval: introduction, timeouts, and retries sections inspected; linked implementations not inspected.",
+    "summary": "Source-backed: remote calls need bounded waits; retries can amplify overload, and ambiguous timeouts can hide completed side effects. Backoff and jitter reduce synchronized retry pressure. The author describes deployment-time failures caused by secure-connection establishment falling inside a very short timeout, later addressed through connection warm-up.",
+    "why": "Learn to separate timeout correctness, retry safety, and overload protection. These are three different decisions.",
+    "problem": "Illustrative study: an API calls a dependency that sometimes stalls. An unlimited wait holds sockets and request state. An immediate retry improves a transient failure but competes with the original work when the dependency is overloaded. Success means bounded caller latency and bounded downstream work, not merely a higher local success rate.",
+    "assumptions": [
+      "Assume an 800 ms end-to-end request budget; numbers are teaching inputs, not AWS settings.",
+      "Assume mutations expose a stable operation identifier. Without this, automatic retry can duplicate effects.",
+      "Assume a deadline can reach downstream clients; verify DNS, TLS, pool waits, and cancellation semantics rather than trusting one read-timeout knob."
+    ],
+    "architecture": [
+      "Illustrative normal path: gateway propagates a deadline → service acquires a bounded concurrency permit → HTTP client sends one call → dependency completes → permit is released.",
+      "Illustrative retry path: classify the failure → verify remaining deadline and replay safety → spend a retry-budget token → wait a randomized interval → attempt again. Stop before the parent deadline.",
+      "A caller timeout does not prove server cancellation. A mutation must reconcile by operation identity when its outcome is unknown."
+    ],
+    "decisions": [
+      [
+        "API",
+        "Stable operation IDs make replay interpretable",
+        "Requires a deduplication contract and retention policy",
+        "Use explicit status lookup when replay cannot be made safe"
+      ],
+      [
+        "Client",
+        "One designated retry layer and deadline",
+        "May expose failures that several hidden layers used to mask",
+        "Allow a second layer only after measuring total amplification"
+      ],
+      [
+        "Runtime",
+        "Concurrency caps contain held resources",
+        "Requests can be rejected during bursts",
+        "Increase caps only with measured downstream headroom"
+      ],
+      [
+        "Operations",
+        "Track attempt counts separately from logical requests",
+        "More telemetry dimensions and ownership",
+        "Aggregate per dependency and retain sampled request traces"
+      ]
+    ],
+    "failures": [
+      [
+        "Dependency slows",
+        "Outstanding work grows, timeouts rise, retries add demand",
+        "Observe in-flight work, queue age, and attempt ratio; shed load, stop retries, then ramp recovery"
+      ],
+      [
+        "Response lost after commit",
+        "Caller cannot distinguish success from failure",
+        "Reuse the same operation identity; do not create a new one to force success"
+      ],
+      [
+        "Deployment cold-start",
+        "New connections consume the deadline",
+        "Measure connection setup separately; warm connections before admitting traffic"
+      ]
+    ],
+    "estimate": "Hypothetical: 1,000 logical requests/s with one extra attempt on 20% of calls yields 1,200 attempts/s. At 0.2 s mean service time, steady-state mean concurrency is approximately 1,200 × 0.2 = 240. A five-layer chain with three total attempts at every layer can generate 3^5 = 243 leaf attempts per logical request. Neither figure is a capacity benchmark.",
+    "whatifs": [
+      [
+        "10× incoming traffic",
+        "A fixed retry percentage becomes a huge absolute load",
+        "Use a bounded token budget and admission control; accept more visible failures"
+      ],
+      [
+        "Stricter 200 ms SLA",
+        "There may be no time for a useful retry",
+        "Prefer one well-budgeted attempt; investigate latency distribution"
+      ],
+      [
+        "Non-idempotent mutation",
+        "Replay safety assumption fails",
+        "Add reconciliation or operation status before enabling retry"
+      ]
+    ],
+    "incident": "Evidence: the inspected AWS section reports cold secure-connection establishment causing deployment-related timeouts. It does not identify the service or give a complete incident timeline. Do not treat it as a measured MTTR improvement.",
+    "products": "Java HTTP clients and resilience libraries are implementation candidates. Compare which phases their deadlines cover, how cancellation works, and whether retries also exist in the SDK, service mesh, and gateway. Current defaults and versions were not evaluated.",
+    "questions": [
+      [
+        "How would you choose a timeout?",
+        "Start from caller budget, downstream distribution, and false-timeout tolerance.",
+        "What if TLS setup is included only for a cold connection?"
+      ],
+      [
+        "Who owns retries across five teams?",
+        "Name one retry layer and an end-to-end attempt budget.",
+        "How do you detect an SDK retry hidden below it?"
+      ],
+      [
+        "Is a timeout safe to retry?",
+        "Distinguish observation from execution and require replay semantics.",
+        "What if the write committed but its response was lost?"
+      ],
+      [
+        "How do you recover from overload?",
+        "Reduce offered work, cap concurrency, and stage restoration.",
+        "Why can jitter alone fail to restore headroom?"
+      ],
+      [
+        "What validates the rollout?",
+        "Shadow or canary retry changes; compare logical success, attempt ratio and tail latency.",
+        "What is your rollback threshold?"
+      ]
+    ],
+    "synthesis": "Use bounded retries for recoverable failures with known replay semantics. Prefer a single attempt when the deadline or side-effect contract makes retry unsafe. Next experiment: inject slow responses and dropped replies while measuring logical requests versus physical attempts.",
+    "date": "2026-11-18",
+    "status": "Analyzed"
+  },
+  {
+    "id": "idempotency",
+    "title": "The write succeeded. The reply disappeared.",
+    "company": "Stripe",
+    "concepts": [
+      "APIs",
+      "Distributed systems"
+    ],
+    "technologies": [
+      "HTTP",
+      "SQL",
+      "Idempotency"
+    ],
+    "url": "https://stripe.com/blog/idempotency",
+    "scope": "Partial retrieval: failure cases, idempotency-key mechanism, and retry discussion inspected; linked current API documentation not inspected.",
+    "summary": "Source-backed: network failures can leave the caller uncertain about whether an operation ran. The article explains client-generated operation keys and describes replaying a stored successful result after a lost response. It also discusses backoff and jitter. This is a 2017 engineering article, not a verification of current API retention limits.",
+    "why": "Important for payment, provisioning, and consent APIs: retry delivery is different from executing a business effect twice.",
+    "problem": "Illustrative study: a client creates one logical resource but retries after losing the response. The server must associate repeated delivery with the same operation. Define the boundary: one tenant, operation type, and request identity. Exactly-once business effects require atomicity or a recovery protocol; a header alone cannot guarantee them.",
+    "assumptions": [
+      "Assume clients reuse the same key for the same logical operation and never for a different payload.",
+      "Assume a transaction can atomically persist both a local business write and its deduplication outcome. External side effects need another protocol.",
+      "Assume the retry horizon is bounded and longer than the period clients may legitimately retry. The source excerpt does not establish current Stripe retention."
+    ],
+    "architecture": [
+      "Illustrative normal write: authorize tenant → compute payload fingerprint → atomically claim unique (tenant, operation, key) → perform local write and record result in one transaction → return persisted response.",
+      "Illustrative duplicate: look up the same scoped key → reject changed payload → return recorded outcome or explicit in-progress status. Concurrent requests must not both become owners.",
+      "For an external effect, write a durable intent/outbox and reconcile provider state by operation identity. A crashed worker can be retried, so downstream execution must also be replay-safe."
+    ],
+    "decisions": [
+      [
+        "API contract",
+        "Key reuse and payload matching define logical identity",
+        "Client integration burden and conflicts",
+        "Use resource-addressed PUT when replacement semantics fit"
+      ],
+      [
+        "Storage",
+        "Unique constraint plus transaction closes local races",
+        "Extra write and contention per key",
+        "Avoid a distributed key store when the business DB can own the invariant"
+      ],
+      [
+        "Retention",
+        "Bounded records control growth",
+        "After expiry a replay may look new",
+        "Retain longer when offline clients have a longer retry horizon"
+      ],
+      [
+        "Security",
+        "Scope records by tenant and authorize every replay",
+        "Adds lookups and audit requirements",
+        "Never use globally guessable keys as authorization"
+      ]
+    ],
+    "failures": [
+      [
+        "Crash between write and outcome",
+        "A second attempt could repeat an effect",
+        "Commit together locally; otherwise reconcile an explicit uncertain state"
+      ],
+      [
+        "Two requests with one key",
+        "A check-then-insert race creates two owners",
+        "Enforce uniqueness in storage; test concurrent transactions"
+      ],
+      [
+        "Expired record replay",
+        "Historical operation may execute again",
+        "Define retry horizon and reject obsolete operations when possible"
+      ]
+    ],
+    "estimate": "Hypothetical: 100 new mutations/s × 86,400 s/day = 8.64 million records/day. At 1 KB/record, raw storage is 8.64 GB/day before indexes, replicas, and payloads. Seven days gives 60.48 GB. Deduplication hits still incur reads; measure hit rate and same-key contention separately.",
+    "whatifs": [
+      [
+        "Cross-region active writers",
+        "Local uniqueness is no longer sufficient",
+        "Choose a home region or globally consistent key claim; pay coordination latency"
+      ],
+      [
+        "Long offline retries",
+        "Retention assumption fails",
+        "Extend lifetime or use durable business identifiers; pay storage cost"
+      ],
+      [
+        "Provider has no replay key",
+        "External effect cannot safely repeat",
+        "Use reconciliation and manual resolution of uncertain outcomes"
+      ]
+    ],
+    "incident": "No specific production incident is established in the inspected article sections. The lost-response sequence above is a hypothetical failure exercise, not a Stripe outage report.",
+    "products": "Candidate mechanisms: a SQL unique constraint with transactions, a conditional key-value write, or a workflow engine. Evaluate atomicity with the business effect, crash recovery, tenant scoping, and expiry. No current product limits or performance ranking were verified.",
+    "questions": [
+      [
+        "What does exactly once mean here?",
+        "Name the effect, identity, and atomicity boundary.",
+        "Can a cache SETNX protect an external charge after a process crash?"
+      ],
+      [
+        "How do you handle concurrent duplicates?",
+        "Use an authoritative uniqueness mechanism and explicit in-progress state.",
+        "What if the owner dies after committing?"
+      ],
+      [
+        "What should a changed payload do?",
+        "Reject identity reuse rather than silently replay an unrelated result.",
+        "Which fields belong in the canonical fingerprint?"
+      ],
+      [
+        "How does retention affect correctness?",
+        "Relate expiry to client retry horizon and business identity.",
+        "What happens after seven days offline?"
+      ],
+      [
+        "How would you migrate the scheme?",
+        "Version identity rules and preserve old records during staged rollout.",
+        "How do rollback clients interpret newly recorded outcomes?"
+      ]
+    ],
+    "synthesis": "Use explicit operation identity for create-like mutations with ambiguous outcomes. Prefer ordinary resource semantics when they naturally express the invariant. Next experiment: kill the process at each transaction boundary and verify one durable local effect.",
+    "date": "2026-11-18",
+    "status": "Analyzed"
+  },
+  {
+    "id": "safe-config",
+    "title": "Configuration changes are production deployments",
+    "company": "Cloudflare",
+    "concepts": [
+      "Reliability",
+      "Security"
+    ],
+    "technologies": [
+      "WAF",
+      "Regex",
+      "Deployment"
+    ],
+    "url": "https://blog.cloudflare.com/details-of-the-cloudflare-outage-on-july-2-2019/",
+    "scope": "Partial retrieval: events, deployment process, contributing factors and remediation sections inspected; full appendix and linked systems not inspected.",
+    "summary": "Source-backed incident: on July 2, 2019 a WAF regular expression caused excessive backtracking and exhausted CPU across Cloudflare’s HTTP/HTTPS serving path. The report describes a 27-minute outage, global rule distribution, missing CPU profiling coverage, and recovery-access difficulties. Remediation included restoring CPU protection and changing rollout practices; some actions were future commitments at publication.",
+    "why": "A high-value Staff case because the failure crosses algorithms, shared resources, release policy, and emergency control-plane access.",
+    "problem": "Illustrative study: security rules must ship fast enough to mitigate attacks, yet execute on a latency-sensitive request path. Passing functional tests does not establish bounded execution cost. A configuration engine that evaluates code-like rules should inherit the release and isolation discipline of production code.",
+    "assumptions": [
+      "Assume one rule runs for every relevant request and shares a CPU pool with essential routing.",
+      "Assume rollback access may depend on the same data plane being changed. Test this explicitly.",
+      "Assume emergency attack mitigation can justify speed, but require a separate, documented decision from routine rollout."
+    ],
+    "architecture": [
+      "Illustrative safe path: rule authoring → correctness and adversarial-cost tests → isolated canary → health evaluation → staged regional rollout. Each stage carries a known rule version and an independent disable path.",
+      "A request traverses the proxy and evaluates bounded rule logic. Budgets must stop a pathological rule from consuming the entire serving pool.",
+      "Publish configuration versions atomically and retain prior versions. Rollback should switch the active version without requiring a full rebuild under outage conditions."
+    ],
+    "decisions": [
+      [
+        "Algorithm",
+        "Bounded matching work reduces worst-case CPU risk",
+        "May restrict expressive patterns or require rewrites",
+        "Choose richer expressions only with effective execution limits"
+      ],
+      [
+        "Isolation",
+        "Separate critical serving resources from optional inspection",
+        "Additional pools and degraded security behavior",
+        "Define fail-open versus fail-closed per route and threat model"
+      ],
+      [
+        "Release",
+        "Canary and regional staging limit blast radius",
+        "Slower global protection rollout",
+        "Emergency bypass requires explicit threat assessment and short-lived authorization"
+      ],
+      [
+        "Recovery",
+        "Independent break-glass access enables disable",
+        "Additional credentials and security exposure",
+        "Audit and drill access; do not weaken ordinary authentication"
+      ]
+    ],
+    "failures": [
+      [
+        "Pathological input",
+        "One expensive rule consumes CPU and starves unrelated requests",
+        "Profile per-rule work; stop the rule and restore service before full re-enable"
+      ],
+      [
+        "Functional-only test suite",
+        "Correct classification hides execution cost",
+        "Add adversarial inputs, worst-case length tests, CPU budgets and regression thresholds"
+      ],
+      [
+        "Control plane depends on broken edge",
+        "Operators cannot authenticate to roll back",
+        "Maintain audited independent recovery access and exercise it regularly"
+      ]
+    ],
+    "estimate": "Hypothetical: at 20,000 requests/s, an extra 1 ms CPU/request requires 20 CPU-seconds per second, approximately 20 fully occupied cores before other work. A 10 ms regression requires about 200 cores. This estimates CPU demand, not actual Cloudflare capacity or incident cost.",
+    "whatifs": [
+      [
+        "Attack requires immediate global rule",
+        "Slow rollout leaves exposure",
+        "Use a consciously approved emergency path with bounded execution and fast disable"
+      ],
+      [
+        "Canary traffic misses the adversarial input",
+        "Representative-load assumption fails",
+        "Combine canaries with synthetic worst-case inputs; neither alone proves safety"
+      ],
+      [
+        "Regional control plane unavailable",
+        "Central rollback path fails",
+        "Use independent access and prepositioned safe versions; audit broader privileges"
+      ]
+    ],
+    "incident": "Verified historical incident is the source of this lesson. The report supports the failure mechanism and contributing factors. Current Cloudflare architecture and completion of all historical commitments were not verified; the proposed design here is a teaching extension.",
+    "products": "Regex engines with execution guarantees, sandboxed rule runtimes, staged configuration systems, and independent management planes are evaluation categories. Check syntax compatibility, worst-case work bounds, observability and emergency disable behavior rather than assuming a named engine solves rollout risk.",
+    "questions": [
+      [
+        "Why did a configuration change need code-level release controls?",
+        "Explain execution cost and shared-resource blast radius.",
+        "What changes for an emergency security rule?"
+      ],
+      [
+        "Which tests would have changed your confidence?",
+        "Separate functional correctness from adversarial performance.",
+        "What if production inputs differ from the corpus?"
+      ],
+      [
+        "Would you fail open?",
+        "Choose by threat and availability impact, per operation.",
+        "Would an authorization decision use the same policy?"
+      ],
+      [
+        "How do you validate rollback?",
+        "Run a drill that removes the primary control plane.",
+        "What if emergency credentials have expired?"
+      ],
+      [
+        "Who owns the risk across teams?",
+        "Define rule ownership, SRE gates and exception authority.",
+        "What evidence permits wider rollout?"
+      ]
+    ],
+    "synthesis": "Apply deployment discipline to configuration that changes execution, routing or security. Functional checks are necessary but insufficient. Next experiment: simulate a CPU-heavy rule while cutting normal admin access and time the independent recovery path.",
+    "date": "2026-11-18",
+    "status": "Analyzed"
+  },
+  {
+    "id": "git-storage",
+    "title": "Coordinate the small state, distribute the large state",
+    "company": "GitHub",
+    "concepts": [
+      "Storage",
+      "Distributed systems",
+      "Cloud migration"
+    ],
+    "technologies": [
+      "Git",
+      "Azure Blob Storage",
+      "Compare-and-swap"
+    ],
+    "url": "https://github.blog/engineering/architecture-optimization/inside-githubs-new-git-storage-architecture/",
+    "scope": "Article text inspected: requirements, request paths, Ref-CAS, compaction and future-work sections; linked earlier migration posts not inspected.",
+    "summary": "Source-backed: GitHub’s November 5, 2026 article separates durable Git packs in Azure Blob Storage from reference and manifest updates in Ref-CAS. Disposable virtual replicas serve requests; separate workers compact packs. Writes upload objects before publishing reference updates. The post distinguishes implemented design from planned improvements, including global replicas. Reported tests are internal, not independently reproduced benchmarks.",
+    "why": "A feed-discovered architecture article with a reusable insight: narrow the coordination boundary before adding more replicas.",
+    "problem": "Illustrative transfer problem: many clients write immutable artifacts while racing on small mutable pointers. Serializing all bytes through a consensus path wastes coordination capacity. Removing coordination entirely risks pointers to missing artifacts. The useful invariant is that every visible committed pointer resolves to durable data.",
+    "assumptions": [
+      "Assume artifacts are immutable and content-addressed. Mutable blobs change overwrite and cache correctness.",
+      "Assume pointer publication can be conditional on an expected old version.",
+      "Assume readers can identify which version they observed; otherwise cache invalidation becomes ambiguous."
+    ],
+    "architecture": [
+      "Source path, paraphrased: a virtual replica indexes and uploads incoming pack data, then commits manifest and reference changes through Ref-CAS. A reader checks its version and fetches needed packs into a local cache.",
+      "Source maintenance, paraphrased: dedicated compaction workers consolidate packs and publish manifest changes independently of request-serving compute.",
+      "Illustrative transfer: apply the same split to artifact metadata, document versions, or model bundles; never publish metadata before its referenced bytes meet the required durability contract."
+    ],
+    "decisions": [
+      [
+        "Data model",
+        "Immutable content allows parallel data writes",
+        "Creates unreachable data after failed publication",
+        "Use a simpler transactional store when artifacts and workload are small"
+      ],
+      [
+        "Coordination",
+        "Conditional pointer updates protect concurrent writers",
+        "Hot pointers still serialize and can conflict",
+        "Partition independent entities; do not shard one invariant casually"
+      ],
+      [
+        "Compute",
+        "Disposable serving caches reduce durable-node coupling",
+        "Cold caches add network traffic and tail latency",
+        "Keep warm capacity where burst latency is important"
+      ],
+      [
+        "Maintenance",
+        "Separate compaction prevents foreground CPU contention",
+        "Adds scheduling, leases, and lifecycle safety",
+        "Co-locate only when measured maintenance load is small"
+      ]
+    ],
+    "failures": [
+      [
+        "Upload succeeds, publication fails",
+        "Orphaned objects consume capacity",
+        "Retry metadata publication conditionally or reclaim after a safe grace period"
+      ],
+      [
+        "Publication succeeds, client reply is lost",
+        "Retry may conflict with already-applied pointer",
+        "Read authoritative pointer state; distinguish already applied from competing update"
+      ],
+      [
+        "Compaction deletes inputs too early",
+        "A reader holding an older manifest loses needed data",
+        "Use a retirement protocol with reader/version safety; exact source GC protocol is unavailable"
+      ]
+    ],
+    "estimate": "Hypothetical: 200 artifact writes/s at 2 MB each requires 400 MB/s object ingress. A 300-byte pointer update adds only 60 KB/s raw metadata before replication and protocol overhead. Small metadata bandwidth does not imply cheap consensus: contention, quorum latency and log durability can dominate.",
+    "whatifs": [
+      [
+        "One hot pointer",
+        "Independent-write assumption fails",
+        "Measure CAS conflict rate; serialize ownership or batch changes, trading latency"
+      ],
+      [
+        "Object storage slows",
+        "Pointer publication waits on durable data",
+        "Apply admission control and fail before publishing unresolved pointers"
+      ],
+      [
+        "10× compaction backlog",
+        "Serving and lifecycle budgets diverge",
+        "Add maintenance capacity and bound fragmentation; more replicas alone may not help"
+      ]
+    ],
+    "incident": "No production outage is established by this article. Failure scenarios here are hypothetical. Its internal test results do not prove a universal SLA or capacity for unrelated workloads.",
+    "products": "Object storage plus a strongly coordinated metadata service is a design category, not a mandate to build custom consensus. Evaluate existing databases for the metadata invariant and include operational staffing in the decision. Exact product pricing, quotas, and cross-region semantics were not evaluated.",
+    "questions": [
+      [
+        "What really needs consensus?",
+        "Identify mutable pointers and invariants; distinguish immutable bytes.",
+        "What if a referenced blob can be overwritten?"
+      ],
+      [
+        "Where is the acknowledgement boundary?",
+        "Prove bytes are durable before pointer visibility.",
+        "What if the reply is lost after commit?"
+      ],
+      [
+        "Can garbage collection race with readers?",
+        "Explain version retention and safe retirement.",
+        "How do you prove an object is no longer needed?"
+      ],
+      [
+        "Does more serving compute fix a hot branch?",
+        "Distinguish CPU work from metadata contention.",
+        "What metric identifies the actual bottleneck?"
+      ],
+      [
+        "How would you migrate safely?",
+        "Shadow reads, verify object parity, stage writes and retain rollback.",
+        "What if old and new stores disagree during rollback?"
+      ]
+    ],
+    "synthesis": "Use this split when immutable bulk data dominates but a small metadata invariant must remain strongly ordered. Prefer one simpler storage system when coordination is not the bottleneck. Next experiment: fault-inject upload, pointer commit, compaction, and stale readers independently.",
+    "date": "2026-11-18",
+    "status": "Analyzed"
+  }
+]

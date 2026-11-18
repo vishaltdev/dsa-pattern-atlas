@@ -28,6 +28,7 @@ for name in ['index.html', 'style.css', 'app.js', 'lab-ui.js', 'patterns.json']:
 studio = root / 'dsa-step-studio'
 subprocess.run(['node', '--test', *[str(p) for p in sorted((studio / 'tests').glob('*.test.mjs'))]], check=True)
 shutil.copytree(studio / 'docs', out / 'dsa-step-studio', dirs_exist_ok=True)
+shutil.copytree(root / 'staff-study', out / 'staff-study', dirs_exist_ok=True, ignore=shutil.ignore_patterns('*.py', '__pycache__'))
 (out / '.nojekyll').touch()
 print('Built dist/: 30 patterns, 180 roadmap entries, all required lesson fields validated.')
 print(f"Verified 30 algorithm results and {sum(len(lab['steps']) for lab in labs)} instruction snapshots.")

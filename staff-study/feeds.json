@@ -1,0 +1,1912 @@
+{
+  "updated": "2026-11-18T12:32:22.515827+00:00",
+  "feeds": [
+    {
+      "company": "Netflix",
+      "url": "https://netflixtechblog.com/feed",
+      "area": "Distributed systems",
+      "why": "Large-scale platforms and data infrastructure",
+      "checked": "2026-11-18T12:32:08.978043+00:00",
+      "status": "Verified RSS/Atom",
+      "count": 10
+    },
+    {
+      "company": "Uber",
+      "url": "https://www.uber.com/blog/engineering/rss/",
+      "area": "Distributed systems",
+      "why": "Storage, messaging and infrastructure trade-offs",
+      "checked": "2026-11-18T12:32:08.979493+00:00",
+      "status": "Unavailable on last check",
+      "count": 0,
+      "error": "HTTPError"
+    },
+    {
+      "company": "Cloudflare",
+      "url": "https://blog.cloudflare.com/rss/",
+      "area": "Reliability",
+      "why": "Edge systems, networking and public postmortems",
+      "checked": "2026-11-18T12:32:08.982387+00:00",
+      "status": "Verified RSS/Atom",
+      "count": 20
+    },
+    {
+      "company": "AWS",
+      "url": "https://aws.amazon.com/blogs/architecture/feed/",
+      "area": "Cloud architecture",
+      "why": "Architecture patterns and cloud operations",
+      "checked": "2026-11-18T12:32:08.983114+00:00",
+      "status": "Unavailable on last check",
+      "count": 0,
+      "error": "ValueError"
+    },
+    {
+      "company": "Google",
+      "url": "https://research.google/blog/rss/",
+      "area": "Distributed systems",
+      "why": "Research foundations and system mechanisms",
+      "checked": "2026-11-18T12:32:08.984486+00:00",
+      "status": "Verified RSS/Atom",
+      "count": 30
+    },
+    {
+      "company": "Meta",
+      "url": "https://engineering.fb.com/feed/",
+      "area": "Storage",
+      "why": "Storage, infrastructure and efficiency",
+      "checked": "2026-11-18T12:32:08.985315+00:00",
+      "status": "Verified RSS/Atom",
+      "count": 9
+    },
+    {
+      "company": "LinkedIn",
+      "url": "https://www.linkedin.com/blog/engineering/feed",
+      "area": "Messaging",
+      "why": "Streaming and data infrastructure",
+      "checked": "2026-11-18T12:32:08.987575+00:00",
+      "status": "Unavailable on last check",
+      "count": 0,
+      "error": "ParseError"
+    },
+    {
+      "company": "Spring",
+      "url": "https://spring.io/blog.atom",
+      "area": "Java / Spring",
+      "why": "Java and Spring application engineering",
+      "checked": "2026-11-18T12:32:08.988896+00:00",
+      "status": "Verified RSS/Atom",
+      "count": 4
+    },
+    {
+      "company": "Confluent",
+      "url": "https://www.confluent.io/blog/feed/",
+      "area": "Messaging",
+      "why": "Kafka, streaming and event delivery semantics",
+      "checked": "2026-11-18T12:32:13.935981+00:00",
+      "status": "Unavailable on last check",
+      "count": 0,
+      "error": "HTTPError"
+    },
+    {
+      "company": "Redis",
+      "url": "https://redis.io/blog/feed/",
+      "area": "Caching",
+      "why": "Cache behavior and data structures",
+      "checked": "2026-11-18T12:32:14.825659+00:00",
+      "status": "Verified RSS/Atom",
+      "count": 30
+    },
+    {
+      "company": "Cockroach Labs",
+      "url": "https://www.cockroachlabs.com/blog/index.xml",
+      "area": "Databases",
+      "why": "Distributed SQL and transaction behavior",
+      "checked": "2026-11-18T12:32:14.844065+00:00",
+      "status": "Unavailable on last check",
+      "count": 0,
+      "error": "HTTPError"
+    },
+    {
+      "company": "GitHub",
+      "url": "https://github.blog/engineering/feed/",
+      "area": "Reliability",
+      "why": "Engineering operations and developer infrastructure",
+      "checked": "2026-11-18T12:32:14.894713+00:00",
+      "status": "Verified RSS/Atom",
+      "count": 10
+    },
+    {
+      "company": "Stripe",
+      "url": "https://stripe.com/blog/feed.rss",
+      "area": "APIs",
+      "why": "Payment APIs and safe mutations",
+      "checked": "2026-11-18T12:32:15.009038+00:00",
+      "status": "Verified RSS/Atom",
+      "count": 10
+    }
+  ],
+  "articles": [
+    {
+      "id": "6253d750368b",
+      "title": "Introducing the joint reference architecture for enterprise-grade Redis on VMware Cloud Foundation 9.1",
+      "url": "https://redis.io/blog/introducing-the-joint-reference-architecture-for-enterprise-grade-redis-on-vmware-cloud-foundation-9-1/",
+      "company": "Redis",
+      "concepts": [
+        "Caching",
+        "Cloud migration"
+      ],
+      "date": "Thu, 05 Nov 2026 00:00:00 GMT",
+      "score": 7,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Redis"
+      ]
+    },
+    {
+      "id": "513e30aed9e5",
+      "title": "Introducing Smooth Scaling: faster, more intelligent scaling",
+      "url": "https://redis.io/blog/smooth-scaling-in-redis-cloud-pro/",
+      "company": "Redis",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Tue, 22 Sep 2026 00:00:00 GMT",
+      "score": 5,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "51dc1d2f6b3b",
+      "title": "Inside GitHub’s new Git storage architecture",
+      "url": "https://github.blog/engineering/architecture-optimization/inside-githubs-new-git-storage-architecture/",
+      "company": "GitHub",
+      "concepts": [
+        "Databases"
+      ],
+      "date": "Thu, 05 Nov 2026 20:23:21 +0000",
+      "score": 5,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Git"
+      ]
+    },
+    {
+      "id": "c30547bb7e55",
+      "title": "Ontology-Driven Observability: Building an End-to-End Knowledge Graph at Netflix Scale",
+      "url": "https://netflixtechblog.com/ontology-driven-observability-building-an-end-to-end-knowledge-graph-at-netflix-scale-421392cf5adf?source=rss----2615bd06b42e---4",
+      "company": "Netflix",
+      "concepts": [
+        "Reliability",
+        "Distributed systems"
+      ],
+      "date": "Fri, 16 Oct 2026 16:01:02 GMT",
+      "score": 4,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "f3cdb850271d",
+      "title": "A Bootiful Podcast: Atomikos founder Guy Pardon on distributed transactions, data integrity, and more",
+      "url": "https://spring.io/blog/2026/11/12/a-bootiful-podcast-guy-pardon",
+      "company": "Spring",
+      "concepts": [
+        "Databases",
+        "Distributed systems"
+      ],
+      "date": "Thu, 12 Nov 2026 00:00:00 GMT",
+      "score": 4,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "ac90245c1e00",
+      "title": "Stop repeating yourself: integrate Azure Managed Redis with your databases",
+      "url": "https://redis.io/blog/stop-repeating-yourself-integrate-azure-managed-redis-with-your-databases/",
+      "company": "Redis",
+      "concepts": [
+        "Caching",
+        "Databases"
+      ],
+      "date": "Tue, 17 Nov 2026 00:00:00 GMT",
+      "score": 4,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Redis"
+      ]
+    },
+    {
+      "id": "2dc99c1a3ea6",
+      "title": "Redis introduces new capabilities to help you operate, build, and scale with confidence",
+      "url": "https://redis.io/blog/redis-introduces-new-capabilities-0926/",
+      "company": "Redis",
+      "concepts": [
+        "Caching",
+        "Distributed systems"
+      ],
+      "date": "Tue, 22 Sep 2026 00:00:00 GMT",
+      "score": 4,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Redis"
+      ]
+    },
+    {
+      "id": "4e95a53e6b7b",
+      "title": "Announcing: Monitor Redis Cloud with Datadog",
+      "url": "https://redis.io/blog/monitor-redis-cloud-with-datadog/",
+      "company": "Redis",
+      "concepts": [
+        "Caching",
+        "Cloud migration"
+      ],
+      "date": "Tue, 22 Sep 2026 00:00:00 GMT",
+      "score": 4,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Redis"
+      ]
+    },
+    {
+      "id": "4ee3a25f5fb1",
+      "title": "Search on Flex comes to Redis Cloud Pro: same Search API, a fraction of the RAM",
+      "url": "https://redis.io/blog/search-on-flex-comes-to-redis-cloud-pro/",
+      "company": "Redis",
+      "concepts": [
+        "Caching",
+        "Cloud migration"
+      ],
+      "date": "Tue, 22 Sep 2026 00:00:00 GMT",
+      "score": 4,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Redis"
+      ]
+    },
+    {
+      "id": "7697a5d09074",
+      "title": "Meta Andromeda: Powering the Next Generation of Ads Retrieval Through Model-System Co-Design",
+      "url": "https://engineering.fb.com/2026/10/28/ml-applications/meta-andromeda-next-gen-ads-retrieval-gpu-co-design/",
+      "company": "Meta",
+      "concepts": [
+        "Storage"
+      ],
+      "date": "Wed, 28 Oct 2026 16:00:01 +0000",
+      "score": 3,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "29f784a4aa30",
+      "title": "Fact-Checking at Scale: Building a More Accurate and Efficient Synopsis Factuality System",
+      "url": "https://netflixtechblog.com/fact-checking-at-scale-building-a-more-accurate-and-efficient-synopsis-factuality-system-d7d85859d808?source=rss----2615bd06b42e---4",
+      "company": "Netflix",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Mon, 09 Nov 2026 17:01:02 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "65a328ac4f85",
+      "title": "Making Failure Diagnosis Reliable with Pensive AI",
+      "url": "https://netflixtechblog.com/making-failure-diagnosis-reliable-with-pensive-ai-6b0811a1c015?source=rss----2615bd06b42e---4",
+      "company": "Netflix",
+      "concepts": [
+        "Reliability"
+      ],
+      "date": "Mon, 26 Oct 2026 17:04:57 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "a009bbdbfbe6",
+      "title": "Adapting to AI penetration testing orchestrators: The Modern Security Model",
+      "url": "https://blog.cloudflare.com/adapting-to-ai-penetration-testing-orchestrators/",
+      "company": "Cloudflare",
+      "concepts": [
+        "Security"
+      ],
+      "date": "Fri, 13 Nov 2026 19:26:07 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "40ec4dab142d",
+      "title": "Introducing Spend Management: Spending limits and alerts for Cloudflare",
+      "url": "https://blog.cloudflare.com/spend-management/",
+      "company": "Cloudflare",
+      "concepts": [
+        "Cloud migration"
+      ],
+      "date": "Fri, 13 Nov 2026 14:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "4d4206ade98b",
+      "title": "Cloudflare services for private origins is now generally available",
+      "url": "https://blog.cloudflare.com/private-origins-public-to-private/",
+      "company": "Cloudflare",
+      "concepts": [
+        "Cloud migration"
+      ],
+      "date": "Fri, 30 Oct 2026 14:23:43 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "93dde8cc7b16",
+      "title": "Cloudflare DDoS Threat Report 2026 Q3: More swarms, fewer giants",
+      "url": "https://blog.cloudflare.com/ddos-threat-report-2026-q3/",
+      "company": "Cloudflare",
+      "concepts": [
+        "Cloud migration"
+      ],
+      "date": "Thu, 29 Oct 2026 12:55:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "b98b75e5e3ef",
+      "title": "Introducing the Cloudflare PHP Capture the Flag challenge",
+      "url": "https://blog.cloudflare.com/php-ctf/",
+      "company": "Cloudflare",
+      "concepts": [
+        "Cloud migration"
+      ],
+      "date": "Tue, 27 Oct 2026 13:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "e77549dba84a",
+      "title": "Cross-request KV cache exposure in the GLM-5.3 Workers AI model, and our remediation with SGLang",
+      "url": "https://blog.cloudflare.com/kv-cache-exposure-remediation/",
+      "company": "Cloudflare",
+      "concepts": [
+        "Caching"
+      ],
+      "date": "Mon, 26 Oct 2026 22:01:23 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "405699f87f1c",
+      "title": "Localizing compliance at scale: Achieving South Korea’s ISMS certification",
+      "url": "https://blog.cloudflare.com/k-isms/",
+      "company": "Cloudflare",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Thu, 22 Oct 2026 13:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "7eeb0a9dde53",
+      "title": "Open and Emergent Problems in Agentic Privacy and Security: A Contextual Angle",
+      "url": "https://research.google/blog/open-and-emergent-problems-in-agentic-privacy-and-security-a-contextual-angle/",
+      "company": "Google",
+      "concepts": [
+        "Security"
+      ],
+      "date": "Mon, 05 Oct 2026 21:08:00 +0000",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "68b74d2f9653",
+      "title": "How We Built TLX: A Hardware-Native GPU Compiler for Production ML at Scale",
+      "url": "https://engineering.fb.com/2026/11/10/open-source/tlx-a-hardware-native-gpu-compiler-for-production-ml/",
+      "company": "Meta",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Tue, 10 Nov 2026 16:59:31 +0000",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "10ecbedee082",
+      "title": "F3 Lightning: How Meta Accelerates Ads ML Features to Production at Scale",
+      "url": "https://engineering.fb.com/2026/11/03/ml-applications/f3-lightning-how-meta-accelerates-ads-ml-features-to-production/",
+      "company": "Meta",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Tue, 03 Nov 2026 17:00:35 +0000",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "b4aa36f8de23",
+      "title": "Catching Bugs Before They Land: JiTTesting’s Human-on-the-Loop Approach at Full Scale",
+      "url": "https://engineering.fb.com/2026/10/29/security/catching-bugs-before-they-land-jittestings-human-on-the-loop-approach-at-full-scale/",
+      "company": "Meta",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Thu, 29 Oct 2026 16:00:12 +0000",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "161b2fb8b94a",
+      "title": "This Week in Spring - November 18th, 2026",
+      "url": "https://spring.io/blog/2026/11/18/this-week-in-spring-november-18th-2026",
+      "company": "Spring",
+      "concepts": [
+        "Java / Spring"
+      ],
+      "date": "Wed, 18 Nov 2026 00:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Spring"
+      ]
+    },
+    {
+      "id": "d728236cbb75",
+      "title": "Spring Office Hours Podcast: S5E30 - What’s New in IntelliJ IDEA and AIR with Anton Arhipov",
+      "url": "https://spring.io/blog/2026/11/16/spring-office-hours-podcast-S5E30",
+      "company": "Spring",
+      "concepts": [
+        "Java / Spring"
+      ],
+      "date": "Mon, 16 Nov 2026 00:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Spring"
+      ]
+    },
+    {
+      "id": "1057975c71a3",
+      "title": "Announcing a New Home for Spring for Apache Pulsar",
+      "url": "https://spring.io/blog/2026/11/10/spring-pulsar-new-home-asf",
+      "company": "Spring",
+      "concepts": [
+        "Java / Spring"
+      ],
+      "date": "Tue, 10 Nov 2026 00:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Spring"
+      ]
+    },
+    {
+      "id": "30d13debd8b2",
+      "title": "Run RediSearch, vector sets, & RedisJSON natively on Windows with Memurai",
+      "url": "https://redis.io/blog/run-redisearch-vector-sets-and-redisjson-natively-on-windows-with-memurai/",
+      "company": "Redis",
+      "concepts": [
+        "Caching"
+      ],
+      "date": "Mon, 16 Nov 2026 00:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Redis"
+      ]
+    },
+    {
+      "id": "a381b2f45e3c",
+      "title": "Give your Vercel AI SDK agents memory with Redis Agent Memory",
+      "url": "https://redis.io/blog/give-your-vercel-ai-sdk-agents-memory-with-redis-agent-memory/",
+      "company": "Redis",
+      "concepts": [
+        "Caching"
+      ],
+      "date": "Mon, 09 Nov 2026 00:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Redis"
+      ]
+    },
+    {
+      "id": "90ef244c34dc",
+      "title": "The next chapter of Redis Iris: what agents need to work in the real world",
+      "url": "https://redis.io/blog/the-next-chapter-of-redis-iris-what-agents-need-to-work-in-the-real-world/",
+      "company": "Redis",
+      "concepts": [
+        "Caching"
+      ],
+      "date": "Wed, 04 Nov 2026 00:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Redis"
+      ]
+    },
+    {
+      "id": "688e1130d844",
+      "title": "Agents Are Software: Introducing the Next Chapter of Redis Iris",
+      "url": "https://redis.io/blog/agents-are-software-introducing-the-next-chapter-of-redis-iris/",
+      "company": "Redis",
+      "concepts": [
+        "Caching"
+      ],
+      "date": "Wed, 04 Nov 2026 00:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Redis"
+      ]
+    },
+    {
+      "id": "23f756d54ec6",
+      "title": "How we built the Redis Docs MCP for agents",
+      "url": "https://redis.io/blog/how-we-built-the-redis-docs-mcp-for-agents/",
+      "company": "Redis",
+      "concepts": [
+        "Caching"
+      ],
+      "date": "Fri, 09 Oct 2026 00:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Redis"
+      ]
+    },
+    {
+      "id": "d88ae41024c5",
+      "title": "Redis OSS Is Now Available on AWS Marketplace",
+      "url": "https://redis.io/blog/redis-oss-is-now-available-on-aws-marketplace/",
+      "company": "Redis",
+      "concepts": [
+        "Caching"
+      ],
+      "date": "Thu, 08 Oct 2026 00:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Redis"
+      ]
+    },
+    {
+      "id": "1eba58cd3f03",
+      "title": "Scale your workloads without paying all-RAM prices",
+      "url": "https://redis.io/blog/scale-your-workloads-without-paying-all-ram-prices/",
+      "company": "Redis",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Wed, 30 Sep 2026 00:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "abebba799df8",
+      "title": "Redis expands strategic collaboration agreement with AWS to accelerate real-time data and AI apps",
+      "url": "https://redis.io/blog/redis-expands-strategic-collaboration-agreement-with-aws-to-accelerate-real-rime-and-ai-applications/",
+      "company": "Redis",
+      "concepts": [
+        "Caching"
+      ],
+      "date": "Tue, 29 Sep 2026 00:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Redis"
+      ]
+    },
+    {
+      "id": "23d902f80ad9",
+      "title": "The official FastAPI Redis SDK is now available",
+      "url": "https://redis.io/blog/the-official-fastapi-redis-sdk-is-now-available/",
+      "company": "Redis",
+      "concepts": [
+        "Caching"
+      ],
+      "date": "Thu, 24 Sep 2026 00:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Redis"
+      ]
+    },
+    {
+      "id": "03bfbf018d72",
+      "title": "Stay up when a region goes down: Highly available Redis for Python apps",
+      "url": "https://redis.io/blog/stay-up-when-a-region-goes-down-highly-available-redis-for-python-applications/",
+      "company": "Redis",
+      "concepts": [
+        "Caching"
+      ],
+      "date": "Wed, 23 Sep 2026 00:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Redis"
+      ]
+    },
+    {
+      "id": "a727fd85e502",
+      "title": "How moving from Azure Cache for Redis to Azure Managed Redis can cut costs by 40%",
+      "url": "https://redis.io/blog/how-moving-from-azure-cache-for-redis-to-azure-managed-redis-can-cut-costs-by-40percent/",
+      "company": "Redis",
+      "concepts": [
+        "Caching"
+      ],
+      "date": "Wed, 23 Sep 2026 00:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Redis"
+      ]
+    },
+    {
+      "id": "19af34d9919c",
+      "title": "Introducing Redis Radar: a single view for your whole Redis fleet",
+      "url": "https://redis.io/blog/introducing-redis-radar/",
+      "company": "Redis",
+      "concepts": [
+        "Caching"
+      ],
+      "date": "Tue, 22 Sep 2026 00:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Redis"
+      ]
+    },
+    {
+      "id": "d82d11da2a9b",
+      "title": "RDI support for federated caches, sharded data sources and multiple pipelines",
+      "url": "https://redis.io/blog/multi-source-and-multi-pipeline-rdi/",
+      "company": "Redis",
+      "concepts": [
+        "Caching"
+      ],
+      "date": "Tue, 22 Sep 2026 00:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "e4e0783fde4c",
+      "title": "Announcing Redis 8.10: Compact Hash, JSONPath extensions, performance improvements, & more",
+      "url": "https://redis.io/blog/announcing-redis-810-compact-hash-jsonpath-extensions-performance-improvements-and-more/",
+      "company": "Redis",
+      "concepts": [
+        "Caching"
+      ],
+      "date": "Mon, 14 Sep 2026 00:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Redis"
+      ]
+    },
+    {
+      "id": "a952788c5c4b",
+      "title": "Put Redis data and engineering guidance to work in ChatGPT Work",
+      "url": "https://redis.io/blog/put-redis-data-and-engineering-guidance-to-work-in-chatgpt-work/",
+      "company": "Redis",
+      "concepts": [
+        "Caching"
+      ],
+      "date": "Fri, 11 Sep 2026 00:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Redis"
+      ]
+    },
+    {
+      "id": "b183935f271c",
+      "title": "Delivering Real-Time Personalization with Databricks and Redis",
+      "url": "https://redis.io/blog/delivering-real-time-personalization-with-databricks-and-redis/",
+      "company": "Redis",
+      "concepts": [
+        "Caching"
+      ],
+      "date": "Tue, 08 Sep 2026 00:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Redis"
+      ]
+    },
+    {
+      "id": "2aecc5964e50",
+      "title": "Security Advisory: CVE-2026-81934",
+      "url": "https://redis.io/blog/security-advisory-cve-2026-81934/",
+      "company": "Redis",
+      "concepts": [
+        "Security"
+      ],
+      "date": "Fri, 28 Aug 2026 00:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "dfa6e5ab7f5b",
+      "title": "Efficient Bulk Hash Insertion with Redis 8.10’s HIMPORT",
+      "url": "https://redis.io/blog/efficient-bulk-hash-insertion-with-redis-810s-himport/",
+      "company": "Redis",
+      "concepts": [
+        "Caching"
+      ],
+      "date": "Mon, 24 Aug 2026 00:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Redis"
+      ]
+    },
+    {
+      "id": "4e1873a34daf",
+      "title": "Vector search database: news & 2026 guide",
+      "url": "https://redis.io/blog/vector-search-database-news-2026-guide/",
+      "company": "Redis",
+      "concepts": [
+        "Databases"
+      ],
+      "date": "Thu, 13 Aug 2026 00:00:00 GMT",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "4ba30d9b0c53",
+      "title": "The bridge to agent-scale Git infrastructure",
+      "url": "https://github.blog/engineering/architecture-optimization/the-bridge-to-agent-scale-git-infrastructure/",
+      "company": "GitHub",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Wed, 21 Oct 2026 16:00:00 +0000",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Git"
+      ]
+    },
+    {
+      "id": "9ddb77314617",
+      "title": "Building Git infrastructure for agent-scale development",
+      "url": "https://github.blog/engineering/architecture-optimization/building-git-infrastructure-for-agent-scale-development/",
+      "company": "GitHub",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Tue, 06 Oct 2026 20:57:56 +0000",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Git"
+      ]
+    },
+    {
+      "id": "02991cb041a3",
+      "title": "How the fastest-growing enterprises on Stripe scale globally",
+      "url": "https://stripe.com/blog/how-the-fastest-growing-enterprises-on-stripe-scale-globally",
+      "company": "Stripe",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Tue, 27 Oct 2026 00:00:00 +0000",
+      "score": 2,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "e9660b224dd9",
+      "title": "Engineering AI Discover",
+      "url": "https://netflixtechblog.com/engineering-ai-discover-e244944cdc38?source=rss----2615bd06b42e---4",
+      "company": "Netflix",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Tue, 17 Nov 2026 17:01:02 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "93ced13be7b2",
+      "title": "Multi‑Ratio Video Resizing for Mobile Feed and Marketing",
+      "url": "https://netflixtechblog.com/multi-ratio-video-resizing-for-mobile-feed-and-marketing-2e6b42810f49?source=rss----2615bd06b42e---4",
+      "company": "Netflix",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Mon, 26 Oct 2026 16:01:02 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "0ae783437195",
+      "title": "Beyond API Compatibility: Building a Tool to Measure the Blast Radius of Library Changes",
+      "url": "https://netflixtechblog.com/beyond-api-compatibility-building-a-tool-to-measure-the-blast-radius-of-library-changes-9474f2fd4f90?source=rss----2615bd06b42e---4",
+      "company": "Netflix",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Fri, 23 Oct 2026 18:32:51 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "3ed693bf52dd",
+      "title": "Single-tenant Titus: VM-level isolation on a multi-tenant container platform",
+      "url": "https://netflixtechblog.com/single-tenant-titus-vm-level-isolation-on-a-multi-tenant-container-platform-6d8b1909d163?source=rss----2615bd06b42e---4",
+      "company": "Netflix",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Thu, 22 Oct 2026 22:19:12 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "f69a57c8fec3",
+      "title": "Integrating Netflix’s Foundation Model into Personalization applications",
+      "url": "https://netflixtechblog.com/integrating-netflixs-foundation-model-into-personalization-applications-cf176b5860eb?source=rss----2615bd06b42e---4",
+      "company": "Netflix",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Wed, 14 Oct 2026 20:02:22 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "275cffd32301",
+      "title": "DataJunction as Netflix’s answer to the missing piece of the modern data stack",
+      "url": "https://netflixtechblog.com/datajunction-as-netflixs-answer-to-the-missing-piece-of-the-modern-data-stack-92af926b40a5?source=rss----2615bd06b42e---4",
+      "company": "Netflix",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Wed, 14 Oct 2026 19:59:08 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "5c00c57a9625",
+      "title": "Measuring the Impact of Personalized Recommendations",
+      "url": "https://netflixtechblog.com/measuring-the-impact-of-personalized-recommendations-4c26be3a4d96?source=rss----2615bd06b42e---4",
+      "company": "Netflix",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Wed, 14 Oct 2026 19:57:43 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "9fd23e018da5",
+      "title": "Quad9’s withdrawal from France: A canary in the coal mine",
+      "url": "https://blog.cloudflare.com/quad9-withdrawal-from-france/",
+      "company": "Cloudflare",
+      "concepts": [
+        "Reliability"
+      ],
+      "date": "Tue, 17 Nov 2026 20:24:27 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "5ab783dcdbdb",
+      "title": "Kitesurf is now open source",
+      "url": "https://blog.cloudflare.com/kitesurf-open-source/",
+      "company": "Cloudflare",
+      "concepts": [
+        "Reliability"
+      ],
+      "date": "Fri, 13 Nov 2026 20:20:21 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "b4c8fa961fce",
+      "title": "Choosing QuePaxa, an unusual consensus algorithm",
+      "url": "https://blog.cloudflare.com/choosing-quepaxa/",
+      "company": "Cloudflare",
+      "concepts": [
+        "Reliability"
+      ],
+      "date": "Wed, 11 Nov 2026 14:24:46 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "f27ad28b0c4d",
+      "title": "Launching the Vite Ecosystem Fund",
+      "url": "https://blog.cloudflare.com/launching-vite-ecosystem-fund/",
+      "company": "Cloudflare",
+      "concepts": [
+        "Reliability"
+      ],
+      "date": "Mon, 09 Nov 2026 13:00:00 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "a4dbacf967e6",
+      "title": "The post-quantum future of web privacy",
+      "url": "https://blog.cloudflare.com/vole-mole/",
+      "company": "Cloudflare",
+      "concepts": [
+        "Reliability"
+      ],
+      "date": "Fri, 06 Nov 2026 14:00:00 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "7303cf34c367",
+      "title": "Agents aren’t humans (but they kinda are)",
+      "url": "https://blog.cloudflare.com/trusted-agent-delegation/",
+      "company": "Cloudflare",
+      "concepts": [
+        "Reliability"
+      ],
+      "date": "Thu, 05 Nov 2026 17:03:04 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "d13fbfe75d78",
+      "title": "See the agents, set the terms: New visibility and control for personal agents",
+      "url": "https://blog.cloudflare.com/personal-agents-visibility-control/",
+      "company": "Cloudflare",
+      "concepts": [
+        "Reliability"
+      ],
+      "date": "Wed, 04 Nov 2026 14:00:00 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "e581154108f5",
+      "title": "Introducing Zero Wire, a hub for investigating critical Internet vulnerabilities",
+      "url": "https://blog.cloudflare.com/zero-wire/",
+      "company": "Cloudflare",
+      "concepts": [
+        "Reliability"
+      ],
+      "date": "Tue, 03 Nov 2026 14:00:00 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "3017d51cc49f",
+      "title": "How we halved DNS build delay and cut memory use by 85%",
+      "url": "https://blog.cloudflare.com/dns-targeted-zone-builds/",
+      "company": "Cloudflare",
+      "concepts": [
+        "Reliability"
+      ],
+      "date": "Mon, 02 Nov 2026 14:00:00 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "46377df52764",
+      "title": "4 real? Tracking exploitation and patching of eMudhra’s weak keys",
+      "url": "https://blog.cloudflare.com/emudhra-patching/",
+      "company": "Cloudflare",
+      "concepts": [
+        "Reliability"
+      ],
+      "date": "Fri, 30 Oct 2026 17:38:50 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "f21bc890ebec",
+      "title": "What took the Internet offline in Q3 2026",
+      "url": "https://blog.cloudflare.com/q3-2026-internet-disruption-summary/",
+      "company": "Cloudflare",
+      "concepts": [
+        "Reliability"
+      ],
+      "date": "Tue, 27 Oct 2026 13:00:00 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "60f970e1df3b",
+      "title": "Origin Range Requests: Serving large files without range-request tuning",
+      "url": "https://blog.cloudflare.com/origin-range-requests/",
+      "company": "Cloudflare",
+      "concepts": [
+        "Reliability"
+      ],
+      "date": "Fri, 23 Oct 2026 18:22:59 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "70bdd870b2ac",
+      "title": "Bringing post-quantum cryptography to geographically fenced key management",
+      "url": "https://blog.cloudflare.com/post-quantum-geo-key-manager/",
+      "company": "Cloudflare",
+      "concepts": [
+        "Reliability"
+      ],
+      "date": "Fri, 23 Oct 2026 18:06:56 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "bea6f68aca51",
+      "title": "Advancing science & engineering with Antigravity’s /teamwork",
+      "url": "https://research.google/blog/advancing-science-engineering-with-antigravitys-teamwork-feature/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Fri, 13 Nov 2026 20:47:18 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "0f5c21881c73",
+      "title": "Using wearables to enable cardiovascular-kidney-metabolic (CKM) risk profiling for personalized coaching",
+      "url": "https://research.google/blog/using-wearables-to-enable-cardiovascular-kidney-metabolic-ckm-risk-profiling-for-personalized-coaching/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Wed, 11 Nov 2026 19:54:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "2dcdb6cee137",
+      "title": "Exploring the world's languages with Language Explorer",
+      "url": "https://research.google/blog/exploring-the-worlds-languages-with-language-explorer/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Mon, 09 Nov 2026 20:29:39 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "6e85f4370dc4",
+      "title": "Detecting signs of hypertension using wearable sensors",
+      "url": "https://research.google/blog/detecting-signs-of-hypertension-using-wearable-sensors/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Thu, 05 Nov 2026 16:01:08 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "09c40cbdb759",
+      "title": "Agile Deliberation: How AI helps humans define the gray areas",
+      "url": "https://research.google/blog/agile-deliberation-how-ai-helps-humans-define-the-gray-areas/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Wed, 04 Nov 2026 18:07:05 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "b49ec3bd8394",
+      "title": "The sleep framework: A new way for LLMs to retain knowledge in continual learning",
+      "url": "https://research.google/blog/the-sleep-framework-a-new-way-for-llms-to-retain-knowledge-in-continual-learning/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Tue, 27 Oct 2026 17:35:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "32ef7801f580",
+      "title": "Bringing foundational models to the front lines of TB screening",
+      "url": "https://research.google/blog/bringing-foundational-models-to-the-front-lines-of-tb-screening/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Fri, 23 Oct 2026 18:51:33 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "3bfcd79e09f1",
+      "title": "Empowering frontline maternal care with AI-assisted ultrasound",
+      "url": "https://research.google/blog/empowering-frontline-maternal-care-with-ai-assisted-ultrasound/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Wed, 21 Oct 2026 16:23:53 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "dd1029b4b030",
+      "title": "Grounding AI agents in biological reality: Building blocks for autonomous wet labs",
+      "url": "https://research.google/blog/grounding-ai-agents-in-biological-reality-building-blocks-for-autonomous-wet-labs/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Fri, 16 Oct 2026 18:11:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "4c456e668ef4",
+      "title": "Putting Earth AI to work: Geospatial agents for our planet's biggest challenges",
+      "url": "https://research.google/blog/putting-earth-ai-to-work-geospatial-agents-for-our-planets-biggest-challenges/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Wed, 14 Oct 2026 16:14:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "6c3fa003d587",
+      "title": "Analyzing technical documents with Deep Review",
+      "url": "https://research.google/blog/analyzing-technical-documents-with-deep-review/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Wed, 14 Oct 2026 16:14:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "f366508f9685",
+      "title": "Research@ 2026: 10 ways we're amplifying human ingenuity",
+      "url": "https://research.google/blog/research-2026-10-ways-were-amplifying-human-ingenuity/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Wed, 14 Oct 2026 16:14:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "b96cc914fffc",
+      "title": "Does better work always mean better workers?",
+      "url": "https://research.google/blog/does-better-work-always-mean-better-workers/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Wed, 07 Oct 2026 20:19:57 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "c02127d34967",
+      "title": "Unlocking Earth AI’s planetary geospatial foundation models for global public health",
+      "url": "https://research.google/blog/earth-ais-planetary-geospatial-foundation-models-for-global-public-health/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Tue, 06 Oct 2026 15:05:11 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "a47750453f6e",
+      "title": "Toward provably private learning from federated data",
+      "url": "https://research.google/blog/toward-provably-private-learning-from-federated-data/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Fri, 02 Oct 2026 14:57:41 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "5cc8f180d7d2",
+      "title": "How Diffusion Controller unifies and simplifies AI image generation",
+      "url": "https://research.google/blog/how-diffusion-controller-unifies-and-simplifies-ai-image-generation/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Tue, 29 Sep 2026 18:38:27 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "8451e6726f36",
+      "title": "Automating coherent long-form video generation",
+      "url": "https://research.google/blog/coherent-long-form-video-generation/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Thu, 24 Sep 2026 19:40:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "a7f1f0b4928f",
+      "title": "MilleMiglia: A realistic instance generator for middle-mile logistics",
+      "url": "https://research.google/blog/millemiglia-a-realistic-instance-generator-for-middle-mile-logistics/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Fri, 18 Sep 2026 17:46:09 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "0f83c2d1d5b8",
+      "title": "The future of practice: Enabling teachers to create learning interactives with generative UI",
+      "url": "https://research.google/blog/the-future-of-practice-enabling-teachers-to-create-learning-interactives-with-generative-ui/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Thu, 17 Sep 2026 20:45:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "f174ca4a3cbc",
+      "title": "Bypassing inference bottlenecks: Accelerating complex AI search with Retrieve-for-Train",
+      "url": "https://research.google/blog/bypassing-inference-bottlenecks-accelerating-complex-ai-search-with-retrieve-for-train/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Tue, 15 Sep 2026 20:00:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "aa8533b1c5b4",
+      "title": "ToolGrad: Efficient tool-use dataset generation with textual \"gradients\"",
+      "url": "https://research.google/blog/toolgrad-efficient-tool-use-dataset-generation-with-textual-gradients/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Thu, 10 Sep 2026 22:50:22 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "8d723f6dece8",
+      "title": "Transfer learning for genomic prediction in underrepresented populations",
+      "url": "https://research.google/blog/transfer-learning-for-genomic-prediction-in-underrepresented-populations/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Thu, 03 Sep 2026 18:20:31 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "8b075fa7888e",
+      "title": "A connectomics milestone: Mapping the complete male fruit fly brain",
+      "url": "https://research.google/blog/a-connectomics-milestone-mapping-the-complete-male-fruit-fly-brain/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Thu, 03 Sep 2026 16:00:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "62800b7caea9",
+      "title": "Mapping global methane emissions from space with deep learning",
+      "url": "https://research.google/blog/mapping-global-methane-emissions-from-space-with-deep-learning/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Tue, 01 Sep 2026 18:40:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "e61516fc5f0a",
+      "title": "TimesFM-3: A zero-shot foundation model for multivariate forecasting",
+      "url": "https://research.google/blog/timesfm-3-a-zero-shot-foundation-model-for-multivariate-forecasting/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Mon, 31 Aug 2026 17:19:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "d4c4006fefc6",
+      "title": "Planetary prediction engine: Automating global models via Earth AI",
+      "url": "https://research.google/blog/planetary-prediction-engine-automating-global-models-via-earth-ai/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Thu, 27 Aug 2026 17:37:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "8b2ec93c5681",
+      "title": "GlucoFM: Foundation model for continuous glucose monitoring",
+      "url": "https://research.google/blog/glucofm-foundation-model-for-continuous-glucose-monitoring/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Wed, 26 Aug 2026 18:42:43 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "16b919027b43",
+      "title": "AgentHands: Generating interactive hand gestures for spatially grounded agent conversations in XR",
+      "url": "https://research.google/blog/agenthands-generating-interactive-hand-gestures-for-spatially-grounded-agent-conversations-in-xr/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Tue, 25 Aug 2026 19:10:59 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "a21cee4b91bd",
+      "title": "An AI tool for prioritizing candidate biomarkers from wearable sensor data",
+      "url": "https://research.google/blog/an-ai-tool-for-prioritizing-candidate-biomarkers-from-wearable-sensor-data/",
+      "company": "Google",
+      "concepts": [
+        "Distributed systems"
+      ],
+      "date": "Fri, 21 Aug 2026 17:02:24 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "9a1e0d772957",
+      "title": "Cuttlefish on Mac: Running Android’s Virtual Device Framework Natively on Apple Silicon",
+      "url": "https://engineering.fb.com/2026/11/13/android/cuttlefish-on-mac/",
+      "company": "Meta",
+      "concepts": [
+        "Storage"
+      ],
+      "date": "Fri, 13 Nov 2026 17:00:39 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "b25fe14c3ef6",
+      "title": "Intelligent Delivery: Making Every Unit of Compute Serve Better Ads",
+      "url": "https://engineering.fb.com/2026/11/11/ml-applications/intelligent-delivery-serve-better-ads/",
+      "company": "Meta",
+      "concepts": [
+        "Storage"
+      ],
+      "date": "Wed, 11 Nov 2026 17:00:38 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "7b22633171b0",
+      "title": "Your Algorithm: Giving People More Ways to Personalize Facebook Recommendations",
+      "url": "https://engineering.fb.com/2026/11/10/ml-applications/your-algorithm-giving-people-more-ways-to-personalize-facebook-recommendations/",
+      "company": "Meta",
+      "concepts": [
+        "Storage"
+      ],
+      "date": "Tue, 10 Nov 2026 17:00:49 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "00b84ea1006c",
+      "title": "Extending LLDB to Debug Applications That Span CPUs and GPUs",
+      "url": "https://engineering.fb.com/2026/11/09/developer-tools/extending-lldb-to-debug-applications-that-span-cpus-and-gpus/",
+      "company": "Meta",
+      "concepts": [
+        "Storage"
+      ],
+      "date": "Mon, 09 Nov 2026 17:00:12 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "c810738ec79e",
+      "title": "PrivacyLib: Privacy Controls at the Data Access Boundary",
+      "url": "https://engineering.fb.com/2026/10/27/security/privacylib/",
+      "company": "Meta",
+      "concepts": [
+        "Storage"
+      ],
+      "date": "Tue, 27 Oct 2026 16:00:12 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "b52d5b33a550",
+      "title": "Connecting coding agents to the right documentation with a navigable context layer",
+      "url": "https://redis.io/blog/navigable-context-layer-for-coding-agents/",
+      "company": "Redis",
+      "concepts": [
+        "Caching"
+      ],
+      "date": "Thu, 29 Oct 2026 00:00:00 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "82f6e3b4e0dd",
+      "title": "ReAct agents explained: concepts & practical uses",
+      "url": "https://redis.io/blog/react-agents-explained-concepts-practical-uses/",
+      "company": "Redis",
+      "concepts": [
+        "Caching"
+      ],
+      "date": "Tue, 18 Aug 2026 00:00:00 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "44aebc3ef958",
+      "title": "Choosing & integrating LLM APIs: a practical guide",
+      "url": "https://redis.io/blog/choosing-integrating-llm-apis-practical-guide/",
+      "company": "Redis",
+      "concepts": [
+        "Caching"
+      ],
+      "date": "Mon, 17 Aug 2026 00:00:00 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "6dcc6af0098b",
+      "title": "Metadata filtering: boost search precision as data grows",
+      "url": "https://redis.io/blog/metadata-filtering-vector-search-precision/",
+      "company": "Redis",
+      "concepts": [
+        "Caching"
+      ],
+      "date": "Mon, 17 Aug 2026 00:00:00 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "5c894119ce91",
+      "title": "Vector search in production: index trade-offs, failure modes & what to watch",
+      "url": "https://redis.io/blog/vector-search-practical-guide/",
+      "company": "Redis",
+      "concepts": [
+        "Caching"
+      ],
+      "date": "Fri, 14 Aug 2026 00:00:00 GMT",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "2f1c65ad4b7e",
+      "title": "Building the Agent Host Protocol for sessions that continue across devices",
+      "url": "https://github.blog/engineering/engineering-principles/building-the-agent-host-protocol-for-sessions-that-continue-across-devices/",
+      "company": "GitHub",
+      "concepts": [
+        "Reliability"
+      ],
+      "date": "Tue, 17 Nov 2026 18:20:40 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "377b59f09743",
+      "title": "Staying Evergreen: How we automated secure access and repo hygiene in a shared org",
+      "url": "https://github.blog/engineering/platform-security/staying-evergreen-how-we-automated-secure-access-and-repo-hygiene-in-a-shared-org/",
+      "company": "GitHub",
+      "concepts": [
+        "Reliability"
+      ],
+      "date": "Thu, 15 Oct 2026 18:00:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "f919ddb4bb17",
+      "title": "From 2,500 requests to 24: Rebuilding star history without the stargazers",
+      "url": "https://github.blog/engineering/architecture-optimization/from-2500-requests-to-24-rebuilding-star-history-without-the-stargazers/",
+      "company": "GitHub",
+      "concepts": [
+        "Reliability"
+      ],
+      "date": "Wed, 14 Oct 2026 19:11:33 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "c6ab1f25135f",
+      "title": "Improving site performance by shipping more CSS",
+      "url": "https://github.blog/engineering/architecture-optimization/improving-site-performance-by-shipping-more-css/",
+      "company": "GitHub",
+      "concepts": [
+        "Reliability"
+      ],
+      "date": "Fri, 25 Sep 2026 15:00:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "0f1a07da5479",
+      "title": "Rendering huge pull requests in the GitHub Copilot app",
+      "url": "https://github.blog/engineering/user-experience/rendering-huge-pull-requests-in-the-github-copilot-app/",
+      "company": "GitHub",
+      "concepts": [
+        "Reliability"
+      ],
+      "date": "Wed, 23 Sep 2026 18:29:49 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": [
+        "Git"
+      ]
+    },
+    {
+      "id": "1738353f28d0",
+      "title": "How we make AI coding more cost efficient without sacrificing task quality",
+      "url": "https://github.blog/ai-and-ml/github-copilot/how-we-make-ai-coding-more-cost-efficient-without-sacrificing-task-quality/",
+      "company": "GitHub",
+      "concepts": [
+        "Reliability"
+      ],
+      "date": "Wed, 02 Sep 2026 18:00:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "d813f28c163e",
+      "title": "Your alt text passes automated checks. That doesn’t mean it’s any good.",
+      "url": "https://github.blog/engineering/user-experience/your-alt-text-passes-automated-checks-that-doesnt-mean-its-any-good/",
+      "company": "GitHub",
+      "concepts": [
+        "Reliability"
+      ],
+      "date": "Mon, 24 Aug 2026 20:56:32 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "b50ce4161fe4",
+      "title": "Analyze your Stripe data directly with your agent",
+      "url": "https://stripe.com/blog/analyze-your-stripe-data-directly-with-your-agent",
+      "company": "Stripe",
+      "concepts": [
+        "APIs"
+      ],
+      "date": "Thu, 05 Nov 2026 00:00:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "e72d79c0a899",
+      "title": "Stripe on Stripe: What we learned moving $1B in vendor payments to Global Payouts",
+      "url": "https://stripe.com/blog/stripe-on-stripe-what-we-learned-moving-1b-in-vendor-payments-to-global-payouts",
+      "company": "Stripe",
+      "concepts": [
+        "APIs"
+      ],
+      "date": "Fri, 30 Oct 2026 00:00:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "b00606b7d715",
+      "title": "Trends from Money20/20 2026: The rise of “hidden” financial services",
+      "url": "https://stripe.com/blog/trends-from-money20-20-2026-the-rise-of-hidden-financial-services",
+      "company": "Stripe",
+      "concepts": [
+        "APIs"
+      ],
+      "date": "Thu, 22 Oct 2026 00:00:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "4f25663723d9",
+      "title": "Stripe survey: Four trends reshaping how SaaS platforms compete in the AI era",
+      "url": "https://stripe.com/blog/saas-platform-trends-in-AI-era",
+      "company": "Stripe",
+      "concepts": [
+        "APIs"
+      ],
+      "date": "Mon, 19 Oct 2026 00:00:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "4a3f737f366f",
+      "title": "New ways for fintechs to move money and expand globally",
+      "url": "https://stripe.com/blog/new-ways-for-fintechs-to-move-money-and-expand-globally",
+      "company": "Stripe",
+      "concepts": [
+        "APIs"
+      ],
+      "date": "Fri, 16 Oct 2026 00:00:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "6a9a2c4c2265",
+      "title": "Sync real-time Stripe data to Postgres with Stripe Data Pipeline",
+      "url": "https://stripe.com/blog/real-time-stripe-data-postgres",
+      "company": "Stripe",
+      "concepts": [
+        "APIs"
+      ],
+      "date": "Thu, 15 Oct 2026 00:00:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "51e4af8dc208",
+      "title": "The “alien” economics of AI monetization",
+      "url": "https://stripe.com/blog/economics-of-ai-monetization",
+      "company": "Stripe",
+      "concepts": [
+        "APIs"
+      ],
+      "date": "Tue, 13 Oct 2026 00:00:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "c906b41a139a",
+      "title": "Why I tried to kill token billing (and why we kept it)",
+      "url": "https://stripe.com/blog/where-pricing-is-headed",
+      "company": "Stripe",
+      "concepts": [
+        "APIs"
+      ],
+      "date": "Thu, 01 Oct 2026 00:00:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    },
+    {
+      "id": "2f1b526d3add",
+      "title": "OUSD is now the default stablecoin on Stripe",
+      "url": "https://stripe.com/blog/ousd-now-live-on-stripe",
+      "company": "Stripe",
+      "concepts": [
+        "APIs"
+      ],
+      "date": "Wed, 30 Sep 2026 00:00:00 +0000",
+      "score": 0,
+      "scope": "Feed metadata only",
+      "status": "Not analyzed",
+      "technologies": []
+    }
+  ]
+}
