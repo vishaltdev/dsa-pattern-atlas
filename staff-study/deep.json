@@ -1,0 +1,724 @@
+{
+  "safe-retries": {
+    "thesis": "A timeout changes what the caller knows. It does not necessarily change what the server did.",
+    "prerequisites": [
+      "Arrival rate: how many requests enter per second.",
+      "Service time: how long each request occupies the constrained resource.",
+      "Deadline: the latest useful completion time for the whole operation.",
+      "Idempotency: repeating the same logical operation preserves its intended effect."
+    ],
+    "chapters": [
+      {
+        "title": "1. Start with the resource that stays occupied",
+        "paragraphs": [
+          "Imagine a Java service waiting for an authorization dependency. While the dependency is slow, something remains occupied: a connection, a concurrency permit, request memory, or a thread. Switching to asynchronous I/O may release the thread; it does not make sockets, memory, downstream CPU, or the outstanding-request budget infinite. First identify which resource is exhausted. “Use async” is not a capacity proof.",
+          "For a stable workload, mean in-flight work is approximately arrival rate multiplied by mean time in the system. At 500 requests/s and 40 ms, about 20 requests are in flight. If the mean rises to 400 ms while arrival rate stays fixed, about 200 are in flight. This is a teaching calculation, not a prediction during an unbounded queue: once admitted load exceeds sustainable throughput, the queue can grow without a steady-state mean.",
+          "This explains why latency can become an availability failure. Slow calls hold capacity, new calls wait longer, their deadlines expire, and clients may submit replacements. The important feedback loop is increased time in system → more occupied resources → more queueing → still more time in system."
+        ]
+      },
+      {
+        "title": "2. Separate four questions that one retry loop often hides",
+        "paragraphs": [
+          "A timeout answers “How long will I wait?” A retry policy answers “Should I send another attempt?” An idempotency contract answers “Can repetition duplicate a business effect?” Admission control answers “Can the system afford more work?” None implies the others. An idempotent request can still overload the server; a low retry count can still duplicate an unsafe write.",
+          "Consider a server that committed a consent update at 90 ms, but whose response never arrived. A client timing out at 100 ms knows only that it did not observe a response in time. Treating this as “the update did not happen” confuses an observation with a state transition. Retrying with a fresh operation ID may produce a second logical operation.",
+          "Cancellation is also a protocol, not a local feeling. Closing a socket or canceling a future may release local work, but the dependency may continue running. If you need canceled work to stop, define propagation, interruption points, and the behavior of a mutation that has already crossed its commit boundary."
+        ]
+      },
+      {
+        "title": "3. Derive a deadline budget instead of copying a timeout",
+        "paragraphs": [
+          "Assume an illustrative caller budget of 800 ms. Reserve 100 ms for gateway, local work, and final response handling. That leaves 700 ms for the dependency sequence. Two attempts capped at 250 ms each and at most 100 ms of backoff consume at most 600 ms, leaving 100 ms of margin. These numbers are a feasibility check, not recommended settings; real budgets need latency measurements and explicit coverage of pool waits, connection setup, and transport phases.",
+          "At each attempt, compute the remaining deadline. If 120 ms remain but a meaningful attempt needs 200 ms, starting that attempt spends scarce resources on work the caller cannot use. A deadline-aware policy should stop. Reserving a little completion time is often more useful than taking one final hopeless attempt.",
+          "Do not add downstream p99 values as if their sum were automatically the caller p99. Percentiles depend on workload and dependence between stages. Measure the end-to-end distribution and use per-stage budgets to reason about feasibility, then validate with traces and fault injection."
+        ]
+      },
+      {
+        "title": "4. Backoff and jitter solve different parts of the load problem",
+        "paragraphs": [
+          "Backoff delays repeat work, allowing a transient condition time to change. If every client uses the same deterministic delay, however, a shared failure synchronizes them. They wait together and retry together. Jitter spreads attempts over an interval; it changes their timing distribution.",
+          "A conceptual full-jitter schedule chooses a random delay between zero and min(cap, base × 2^attempt). A cap prevents waits from growing indefinitely. A maximum attempt count and overall deadline prevent an endless retry stream at the cap. A retry token budget limits the absolute extra work even when many logical requests are failing at once.",
+          "Jitter does not create capacity. If original requests already exceed the dependency’s sustainable rate, randomizing additional attempts still adds work to an overloaded system. Backpressure, rejection, or reduced demand is required to restore headroom. This is the connection between retry policy and queue stability."
+        ]
+      },
+      {
+        "title": "5. A policy you can implement and falsify",
+        "paragraphs": [
+          "Before sending: check the remaining deadline, a concurrency permit, and a retry token if this is not the first attempt. After failure: classify whether retry might help, confirm replay safety, and ensure another attempt can complete before the deadline. Release local resources on every exit. The policy is only as good as the semantics of the underlying client and dependency.",
+          "Keep logical-request IDs separate from attempt IDs. Otherwise a rise from 1,000 user operations to 1,800 downstream calls can look like successful traffic growth. Observe attempts per logical operation, abandoned work, deadline remaining at send, concurrency saturation, queue age, and p95/p99 useful completion time.",
+          "Roll out per dependency or tenant cohort. Compare caller success with downstream work, not just retry success. A policy can improve one caller’s availability by consuming capacity that makes other callers fail. Staff judgment includes deciding who owns that externality and who can disable retries during an incident."
+        ]
+      }
+    ],
+    "misconceptions": [
+      [
+        "“A 100 ms timeout stops 100 ms of server work.”",
+        "It bounds caller waiting only unless server cancellation is cooperatively enforced."
+      ],
+      [
+        "“Jitter prevents overload.”",
+        "It spreads bursts; it cannot make a sustained excess of offered load fit capacity."
+      ],
+      [
+        "“Three retries is small.”",
+        "Three retries means up to four attempts; independent layers multiply attempts. Specify total attempts explicitly."
+      ]
+    ],
+    "connections": [
+      {
+        "term": "Idempotency",
+        "relation": "Makes ambiguous retries safe",
+        "explanation": "After a lost reply, repeat the same operation identity. The deduplication boundary must include the business effect, not merely an HTTP header.",
+        "target": "idempotency"
+      },
+      {
+        "term": "Backpressure",
+        "relation": "Keeps retries inside the capacity budget",
+        "explanation": "When consumers cannot keep up, admitting less work can improve useful completion. A queue delays rejection but does not remove the excess.",
+        "target": null
+      },
+      {
+        "term": "Circuit breaking",
+        "relation": "Stops calls when further attempts are unlikely to help",
+        "explanation": "This changes admitted load and failure mode. Half-open probes and thresholds must not create a synchronized recovery burst.",
+        "target": null
+      },
+      {
+        "term": "Caching",
+        "relation": "Can move the overload to a different dependency",
+        "explanation": "A hypothetical “fallback to DB” after a cache failure may flood a DB sized for misses. Evaluate fallback capacity and correctness before naming it a recovery path.",
+        "target": null
+      },
+      {
+        "term": "Safe rollout",
+        "relation": "Treats resilience settings as executable policy",
+        "explanation": "Changing retry count or timeout can change load globally even with no application-code change. Canary the policy and keep an independent disable path.",
+        "target": "safe-config"
+      }
+    ],
+    "checkpoint": [
+      "A server commits at 90 ms. The caller times out at 100 ms and retries at 120 ms. What fact does the timeout establish?",
+      "Only that the caller did not receive the needed response before its deadline. It does not establish rollback, lack of side effects, or successful cancellation. Recovery requires operation identity, status reconciliation, or another explicit correctness protocol."
+    ],
+    "scenarios": [
+      {
+        "name": "Broken: timeout creates duplicate work",
+        "steps": [
+          {
+            "event": "t=0 ms · send operation K",
+            "state": "Caller: waiting · Server: running K · Effects: 0",
+            "why": "The request is one logical intent. The attempt is only its current delivery."
+          },
+          {
+            "event": "t=90 ms · transaction commits",
+            "state": "Caller: waiting · Server: K committed · Effects: 1",
+            "why": "The server crossed its durable boundary before the caller saw a result."
+          },
+          {
+            "event": "t=100 ms · caller timeout fires",
+            "state": "Caller: unknown outcome · Server: committed · Effects: 1",
+            "why": "The caller’s observation changed; the committed state did not."
+          },
+          {
+            "event": "t=120 ms · retry uses a fresh key J",
+            "state": "Caller: waiting on J · Server: treats J as a new intent",
+            "why": "The client has lost the relationship between repeat delivery and the original intent."
+          },
+          {
+            "event": "t=180 ms · J commits",
+            "state": "Effects: 2 · Client may observe only one success",
+            "why": "HTTP success statistics cannot prove the business invariant. The failure is duplicate intent identity."
+          }
+        ]
+      },
+      {
+        "name": "Repaired: same identity, bounded retry",
+        "steps": [
+          {
+            "event": "t=0 ms · send K with a deadline",
+            "state": "Operation K · Attempt A · One concurrency permit",
+            "why": "The transport attempt and business identity are distinct."
+          },
+          {
+            "event": "t=90 ms · K commits, reply is lost",
+            "state": "Deduplication record: K complete · Effects: 1",
+            "why": "Assume effect and deduplication outcome commit atomically in the same local database."
+          },
+          {
+            "event": "t=100 ms · local timeout",
+            "state": "Caller outcome: unknown · Deadline remains",
+            "why": "Do not label an unknown write as failed or generate a new operation key."
+          },
+          {
+            "event": "t=120 ms · policy permits replay of K",
+            "state": "Operation K · Attempt B · Retry token spent",
+            "why": "A different attempt uses the same logical identity and must fit the remaining budget."
+          },
+          {
+            "event": "t=140 ms · return recorded outcome",
+            "state": "Effects: 1 · Caller knows completion",
+            "why": "Replay safety comes from server-side atomicity. Backoff alone could not provide it."
+          }
+        ]
+      }
+    ],
+    "boundary": "Original conceptual teaching and hypothetical worked examples. These sections explain transferable mechanisms; they are not additional claims about the linked company implementation.",
+    "wordCount": 811,
+    "example": {
+      "title": "Deadline-aware retry policy · Java-like pseudocode",
+      "code": "operationId = callerSuppliedStableId;\nfor (int attempt = 0; attempt < MAX_TOTAL_ATTEMPTS; attempt++) {\n    remaining = deadline - monotonicNow();\n    if (remaining < minimumUsefulAttemptBudget) stop();\n    if (attempt > 0 && !retryBudget.tryTake()) stop();\n    permit = concurrencyLimit.tryAcquire();\n    if (permit == NONE) rejectOrDefer();\n    try {\n        return send(operationId, remaining);\n    } catch (Failure f) {\n        if (!isRetryable(f) || !isReplaySafe(operationId)) throw f;\n    } finally {\n        permit.release();\n    }\n    sleepWithDeadline(fullJitter(attempt), deadline);\n}\nreportUnknownOrFailedAccordingToOutcome();",
+      "explanation": "The deadline is checked again on each iteration; an attempt limit alone does not bound time. The same operation ID survives every delivery. A failed local wait cannot decide whether a remote mutation committed. Every send is admitted through a capacity gate, and retry tokens limit additional work. Helpers here stand for explicit contracts, not verified library APIs: this is policy pseudocode, not copy-paste Java. In real code, a rejected permit must exit control flow; cancellation and interrupts must be propagated, and all transport phases must respect the budget."
+    },
+    "references": []
+  },
+  "idempotency": {
+    "thesis": "The hard part is making the effect and the memory of the effect agree after every possible crash.",
+    "prerequisites": [
+      "Logical intent: one business operation, independent of how many messages deliver it.",
+      "Atomicity: either all writes in a transaction commit or none do.",
+      "Unique constraint: storage arbitrates concurrent claims for the same identity.",
+      "Linearization point: the event at which a concurrent operation takes effect in the chosen model."
+    ],
+    "chapters": [
+      {
+        "title": "1. Why an ordinary retry cannot resolve an unknown write",
+        "paragraphs": [
+          "Suppose a client asks to create a consent grant. It sends one request, the server commits, and the response disappears. From the client’s perspective, this looks similar to a server crash before commit. Those two server histories require different action if repetition creates another grant. The uncertainty is fundamental to the information available, not a reason to increase the timeout forever.",
+          "Assign the business intent a stable identity K before the first attempt. A retry delivers K again. A genuinely new operation uses a new identity. The key is not “this HTTP request object” or “the resource ID” by default: one resource can receive many distinct updates. Choose identity according to the business operation you want to deduplicate.",
+          "Idempotency describes the intended effect of repetition. It does not require byte-identical responses for every method: deleting an already-deleted resource can leave the same final state even if response codes differ. For create-like POST operations, replaying the stored operation outcome is one explicit API design. Do not infer such behavior from the method name alone."
+        ]
+      },
+      {
+        "title": "2. Find the race in check-then-act",
+        "paragraphs": [
+          "A naive implementation checks a cache for K, performs the mutation, then caches the response. Two workers can both observe “missing” before either writes. Both perform the mutation. Even with a single worker, a crash after the business write but before the cache update leaves the next attempt unable to know what happened.",
+          "Adding a short-lived lock closes only part of the problem. If the owner pauses longer than the lease, another owner may acquire the lock while the old owner resumes. A fencing version can let the protected storage reject stale owners, but it must be checked by the resource being protected. Expiring a cache key is not the same as aborting a business transaction.",
+          "This is why “SETNX plus TTL” is not a complete answer. You need to explain what is durably remembered, how ownership survives pauses, and how the effect relates atomically to the recorded outcome. Use the simplest authoritative storage that can enforce that invariant."
+        ]
+      },
+      {
+        "title": "3. Derive a single-database design",
+        "paragraphs": [
+          "For a hypothetical local SQL implementation, use an operation table with tenant_id, operation_type, key, request_hash, state, and result. Enforce uniqueness on the scoped key. In one transaction, claim that key, apply the business mutation, and persist the completed result. The commit is the durable boundary. Only then return success.",
+          "If the process crashes before commit, neither the operation row nor its business effect commits. If it crashes after commit, both exist and a replay can return the recorded outcome. A concurrent duplicate may wait on the uniqueness conflict or transaction and then inspect committed state. Exact statement behavior and retry handling depend on the database and isolation level; test the conflict path rather than assuming a SELECT is sufficient.",
+          "A single long transaction is not always desirable. If you durably commit an IN_PROGRESS record before doing work, you have introduced an explicit recovery protocol. The record now needs ownership, attempts, timeouts and a way to determine whether a previous worker applied the effect. “Just retry it after a timeout” recreates the original ambiguity unless the effect is itself replay-safe."
+        ]
+      },
+      {
+        "title": "4. Cross-system effects reveal the real boundary",
+        "paragraphs": [
+          "A local transaction cannot atomically commit an external payment or send an email. If the external provider accepts the operation but the local process dies before recording success, the local database alone cannot determine whether it should repeat the external effect. Extending a local lock does not solve the split commit.",
+          "An outbox makes local state and the intent to publish agree atomically: commit the business state and an event in one database transaction, then let a worker publish it. But the worker can crash after publish and before marking the outbox record sent. The outbox therefore provides recoverable delivery, not magical duplicate-free external execution.",
+          "The receiving side needs a stable event identity and an atomic inbox/business-effect boundary, or the provider must support an operation key or status query. When no authoritative reconciliation is possible, represent the result as uncertain and define an operational resolution path. That is more honest than declaring exactly-once execution across an uncooperative system."
+        ]
+      },
+      {
+        "title": "5. Retention, authorization, and semantic identity are correctness decisions",
+        "paragraphs": [
+          "A deduplication record is a memory of history. Deleting it means future delivery of the same key may look new. Therefore retention must cover the permitted retry horizon, or the API must reject stale operations using another durable business identity. A TTL is a product contract about how long memory matters, not only a storage tuning knob.",
+          "Scope keys by tenant and operation. Compare a canonical request fingerprint so the same key cannot silently authorize a different payload. Decide which fields are semantically significant and version that rule. Authenticate and authorize a replay independently: possession of a key is not proof of permission, and a cached historical response may contain data the caller can no longer access.",
+          "In a consent system, deduplicating delivery is different from deduplicating business relationships. “One consent per party/resource pair” is a domain uniqueness rule; “do not execute this create intent twice” is an operation rule. You may need both. Separate them to explain why two intentionally different requests can conflict even when they have different operation keys."
+        ]
+      },
+      {
+        "title": "6. Translate the invariant into tests",
+        "paragraphs": [
+          "Test simultaneous requests with the same identity, with equal and unequal payloads. Kill the worker before effect, after effect, before commit, after commit, and before response. Verify one durable business effect, not merely one successful HTTP response. Exercise expiry and authorization changes explicitly.",
+          "For cross-system delivery, include a fake receiver that records each attempt and each business effect separately. Lose the acknowledgement after receiving, then restart the publisher. A correct design may deliver twice while applying the effect once. This is the precise distinction behind many interview discussions of “exactly once”."
+        ]
+      }
+    ],
+    "misconceptions": [
+      [
+        "“A lock makes an operation idempotent.”",
+        "Mutual exclusion while the lock is held is not a durable record of a completed effect."
+      ],
+      [
+        "“An outbox eliminates duplicates.”",
+        "It prevents losing a committed publication intent. The consumer still needs a replay-safe effect."
+      ],
+      [
+        "“A unique operation key prevents every duplicate consent.”",
+        "It prevents repeat delivery of that intent. Domain uniqueness can require a separate constraint."
+      ]
+    ],
+    "connections": [
+      {
+        "term": "Retries",
+        "relation": "Create the repeated deliveries this contract must absorb",
+        "explanation": "Retry logic cannot know the business effect from a transport timeout. It must preserve the intent ID.",
+        "target": "safe-retries"
+      },
+      {
+        "term": "Transactions",
+        "relation": "Couple the business write to its durable memory",
+        "explanation": "If those writes can disagree after a crash, a deduplication lookup cannot prove whether execution already occurred.",
+        "target": null
+      },
+      {
+        "term": "Compare-and-swap",
+        "relation": "Selects a winner under concurrency",
+        "explanation": "A conditional claim protects a state transition. The expected value must represent the state you actually validated.",
+        "target": "git-storage"
+      },
+      {
+        "term": "Outbox / inbox",
+        "relation": "Move atomicity to each side of the delivery boundary",
+        "explanation": "Atomic local intent plus replay-safe consumption gives recoverable progress without claiming a cross-system transaction.",
+        "target": null
+      },
+      {
+        "term": "Cache invalidation",
+        "relation": "Shows the limits of a time-based guarantee",
+        "explanation": "Expiring deduplication or authorization data changes the correctness envelope. A short TTL does not establish instantaneous revocation.",
+        "target": null
+      }
+    ],
+    "checkpoint": [
+      "A worker holds a 500 ms cache lock, commits a mutation, pauses for 700 ms, then resumes. Is another worker safe to execute after lock expiry?",
+      "Not from lease expiry alone. The original effect may already be committed, and the stale owner may still execute. Check the durable operation state and enforce atomic effect/outcome recording, or use a recovery protocol with resource-enforced fencing where appropriate."
+    ],
+    "scenarios": [
+      {
+        "name": "Broken: effect and cache record are separate",
+        "steps": [
+          {
+            "event": "A checks key K",
+            "state": "Cache K: missing · Business effects: 0",
+            "why": "A read is not an atomic claim."
+          },
+          {
+            "event": "B checks key K",
+            "state": "Cache K: missing · Both workers proceed",
+            "why": "Concurrent workers observed the same old state."
+          },
+          {
+            "event": "A commits a grant",
+            "state": "Business effects: 1 · Cache K: missing",
+            "why": "A crash here leaves a durable effect without durable memory in the cache."
+          },
+          {
+            "event": "B commits a grant",
+            "state": "Business effects: 2",
+            "why": "The intended business invariant is already violated before either response is cached."
+          },
+          {
+            "event": "Both write cached success",
+            "state": "Cache K: success · Business effects: 2",
+            "why": "A clean-looking deduplication cache can hide an already-created duplicate."
+          }
+        ]
+      },
+      {
+        "name": "Repaired: one local transactional boundary",
+        "steps": [
+          {
+            "event": "A begins transaction and claims K",
+            "state": "Operation K: uncommitted · Unique claim owned by A",
+            "why": "The database arbitrates the identity, not a preceding application SELECT."
+          },
+          {
+            "event": "B attempts the same unique claim",
+            "state": "B cannot independently commit another K",
+            "why": "For this illustrative model, B waits for A’s transaction to resolve."
+          },
+          {
+            "event": "A writes grant and result",
+            "state": "Grant + operation outcome: uncommitted",
+            "why": "Neither is yet a durable success visible to another completed transaction."
+          },
+          {
+            "event": "A commits, then crashes before reply",
+            "state": "Grant + outcome: durable · Effects: 1",
+            "why": "The durable memory and effect become true together."
+          },
+          {
+            "event": "B observes the committed conflict",
+            "state": "Matching payload · Existing result available",
+            "why": "Handle the conflict path by reading authoritative committed outcome."
+          },
+          {
+            "event": "B returns the recorded outcome",
+            "state": "Effects: 1 · Repeat delivery safely resolved",
+            "why": "The guarantee covers this local effect. External effects require their own boundary."
+          }
+        ]
+      }
+    ],
+    "boundary": "Original conceptual teaching and hypothetical worked examples. These sections explain transferable mechanisms; they are not additional claims about the linked company implementation.",
+    "wordCount": 932,
+    "example": {
+      "title": "Local atomicity · transactional pseudocode",
+      "code": "BEGIN;\n  INSERT operation(tenant, kind, key, request_hash)\n    VALUES (:tenant, :kind, :key, :hash);\n  -- UNIQUE(tenant, kind, key) selects one owner.\n  APPLY_LOCAL_BUSINESS_MUTATION;\n  UPDATE operation\n     SET state = 'COMPLETE', result = :result\n   WHERE tenant = :tenant AND kind = :kind AND key = :key;\nCOMMIT;\nRETURN :result;\n\n-- On a duplicate-key conflict:\n-- resolve/rollback the failed transaction as required;\n-- read committed outcome in an appropriate transaction;\n-- check tenant permission and request_hash before replay.",
+      "explanation": "The point is the boundary around both the effect and its recorded outcome. Database syntax, transaction-abort behavior, blocking and retry requirements vary; this snippet is deliberately not executable SQL. If the business mutation is an external HTTP call, this transaction no longer proves one external effect. If an IN_PROGRESS record is committed separately, design ownership and reconciliation instead of pretending the same proof still holds."
+    },
+    "references": [
+      {
+        "title": "HTTP method semantics · RFC 9110, §9.2.2",
+        "url": "https://www.rfc-editor.org/rfc/rfc9110.html#name-idempotent-methods",
+        "note": "Additional primary reference for intended-effect idempotence; not evidence of current Stripe implementation."
+      },
+      {
+        "title": "PostgreSQL transaction isolation",
+        "url": "https://www.postgresql.org/docs/current/transaction-iso.html",
+        "note": "Additional primary reference for concurrency and isolation. Validate exact conflict-handling behavior for your chosen database."
+      }
+    ]
+  },
+  "safe-config": {
+    "thesis": "A change is dangerous because of the work it causes and the scope it reaches, even when its file is called configuration.",
+    "prerequisites": [
+      "Data plane: the request-serving path.",
+      "Control plane: the path that configures, administers, or repairs the system.",
+      "Blast radius: which users and components one failure can affect.",
+      "Worst-case work: the resource cost of the most expensive permitted input."
+    ],
+    "chapters": [
+      {
+        "title": "1. Start below the deployment system: how input consumes CPU",
+        "paragraphs": [
+          "A rule evaluator is a program. For each incoming request, it transforms input into a decision. Its performance depends on input size, pattern structure and execution algorithm. A rule can return exactly the right allow/block decision on normal examples while consuming unacceptable CPU for a different input. Functional correctness and resource safety are separate properties.",
+          "To understand backtracking, imagine a matcher that tries multiple ways to divide a repeated run of characters, then discovers at the end that the required suffix is absent. It may revisit many candidate partitions. Nested ambiguous repetition can produce a rapidly increasing number of search paths. This is a conceptual explanation, not a claim about the exact complexity of the historical Cloudflare expression.",
+          "The useful question is “What bounds the work before a rule must return?” Input length limits, a runtime work budget, a matching algorithm with suitable complexity guarantees, or isolation can each constrain risk, with different compatibility and false-negative costs. A timeout checked only after evaluation returns cannot stop an evaluator that never yields."
+        ]
+      },
+      {
+        "title": "2. Connect per-request cost to service-wide failure",
+        "paragraphs": [
+          "Assume a teaching workload of 10,000 requests/s. Adding 2 ms of CPU per request adds 20 CPU-seconds/s of demand. A pool with spare capacity of four cores cannot absorb that merely because requests are concurrent. Concurrency can hide waiting; it cannot make twenty cores worth of CPU demand fit four cores.",
+          "Once the serving pool saturates, even inexpensive routes sharing that pool may wait. Queues grow; callers time out; retries add more requests; health checks may also become delayed. The original fault was in one rule, but the failure domain was the entire shared resource pool. The relationship between logical component ownership and physical resource isolation matters.",
+          "This suggests two independent controls: bound the work of one evaluation and bound how much of the shared service the evaluator can consume. A per-rule limit can reduce one request’s damage; bulkheading can prevent all inspection work from starving essential serving. Neither substitutes for a safe publication process."
+        ]
+      },
+      {
+        "title": "3. Why “simulate mode” is not “no impact”",
+        "paragraphs": [
+          "A hypothetical dry run may compute a decision without enforcing it. This removes one business side effect but retains CPU, memory, I/O, logging, or dependency calls used to compute the result. The phrase “read-only” says little about resource consumption. Shadow traffic likewise creates work somewhere.",
+          "Before a shadow launch, specify which operations are suppressed and which still execute. If request evaluation performs an external call, does the dry run call that provider? If it logs one event per match, can the logging pipeline saturate? The same reasoning applies to authorization-policy testing and migration shadow reads.",
+          "A good canary observes correctness and execution cost under representative and adversarial input. A canary with no triggering input can remain healthy while a global rollout fails. Combine limited exposure with synthetic worst-case probes; explain what each covers and what remains untested."
+        ]
+      },
+      {
+        "title": "4. Treat rollout as a state machine with explicit evidence gates",
+        "paragraphs": [
+          "Model versions as candidate → validated → limited exposure → expanded exposure → active, with a transition back to a known-safe version. Each transition needs evidence and an owner. For security rules, the evidence must balance attack exposure against rollout risk; there may be an emergency path, but it should be an explicit exception with bounded scope and a rapid disable mechanism.",
+          "A meaningful gate measures user impact and resource behavior: error rate, useful-request latency, CPU time per evaluation, queue delay and rule-specific failures. Comparing only process liveness can miss a service that is alive but too overloaded to be useful. Thresholds need baselines and sufficient traffic; one arbitrary fixed CPU percentage is not a universal policy.",
+          "Version pinning makes it possible to answer “Which exact rule set processed this request?” Retain enough history to relate a symptom to a change. If rollback rebuilds the entire configuration pipeline, the recovery critical path can be much longer than a simple version switch. Measure rollback under the same degraded conditions that made it necessary."
+        ]
+      },
+      {
+        "title": "5. Draw the recovery dependency graph before the incident",
+        "paragraphs": [
+          "If repairing the edge requires authenticating through the edge, a data-plane failure can lock operators out of the control plane. The dependency is circular: repair needs access; access needs the thing being repaired. A spare copy of the dashboard behind the same dependency may not break that cycle.",
+          "An independent recovery path needs more than a URL. It needs usable credentials, routing, authorization, runbooks, and an operator who can execute it during stress. Drill it with the ordinary path unavailable. Keep the path narrow and audited; independence is not a reason to give permanent unrestricted access.",
+          "In a hypothetical consent platform, disabling the policy evaluator to restore throughput might allow unauthorized access. A fail-open policy acceptable for one optional inspection function may be unacceptable for authorization. Define degradation per operation and threat model. Availability does not automatically outrank the correctness or security invariant."
+        ]
+      },
+      {
+        "title": "6. Design the experiment that would change your mind",
+        "paragraphs": [
+          "Inject a cost regression into one non-production rule. Observe whether its resource budget stops it, whether unrelated requests remain healthy, and whether the canary gate prevents expansion. Then make the primary administrative path unavailable and time rollback through the recovery path.",
+          "The experiment should produce evidence about separate protections. If the only successful defense is “someone noticed CPU rising”, you still depend on detection latency and manual response. If rollback works only when every management dependency is healthy, you have not tested the failure mode you are designing for."
+        ]
+      }
+    ],
+    "misconceptions": [
+      [
+        "“Configuration is safer than code.”",
+        "Its evaluated behavior, access to resources, and propagation scope determine risk."
+      ],
+      [
+        "“Dry run cannot harm users.”",
+        "It can consume the same scarce resources while suppressing only enforcement."
+      ],
+      [
+        "“We have a rollback plan.”",
+        "A plan is insufficient unless its dependencies and credentials work during the actual failure."
+      ]
+    ],
+    "connections": [
+      {
+        "term": "Retry storms",
+        "relation": "Turn one expensive rule into extra incoming work",
+        "explanation": "Clients reacting to errors can amplify demand on an already-saturated serving pool. Limit attempts independently of rule recovery.",
+        "target": "safe-retries"
+      },
+      {
+        "term": "Bulkheads",
+        "relation": "Make logical isolation real at the resource boundary",
+        "explanation": "Separate ownership in code does not isolate CPU pools, connection pools, queues, or management dependencies.",
+        "target": null
+      },
+      {
+        "term": "Control-plane independence",
+        "relation": "Keeps the repair path outside the failure domain",
+        "explanation": "Ask what is needed to disable a bad rule if the primary network, authentication, and dashboard path is unavailable.",
+        "target": null
+      },
+      {
+        "term": "Consistency and revocation",
+        "relation": "Make rollout speed a correctness trade-off",
+        "explanation": "Staged authorization updates create mixed policy versions. Decide whether a revocation needs a stronger barrier than an ordinary feature change.",
+        "target": null
+      },
+      {
+        "term": "Immutable versions and mutable pointers",
+        "relation": "Make rollback a controlled pointer transition",
+        "explanation": "Keep candidate versions immutable; coordinate which one is active and prove the selected version is present before publication.",
+        "target": "git-storage"
+      }
+    ],
+    "checkpoint": [
+      "A rule runs in shadow mode and never blocks a request. Can it still cause an outage? Explain the mechanism.",
+      "Yes. It can consume CPU, memory, I/O or shared dependency capacity even though its allow/block result is ignored. If those resources are shared with essential traffic, saturation propagates. Test resource cost and scope, not just enforcement behavior."
+    ],
+    "scenarios": [
+      {
+        "name": "Broken: a safe-looking shadow rollout",
+        "steps": [
+          {
+            "event": "Publish a rule in shadow mode",
+            "state": "Enforcement: disabled · Evaluation: enabled",
+            "why": "No blocking decision does not mean no execution."
+          },
+          {
+            "event": "An expensive input reaches the evaluator",
+            "state": "Evaluation CPU time rises sharply",
+            "why": "The rule cost depends on the input; happy-path examples did not cover it."
+          },
+          {
+            "event": "Shared serving pool saturates",
+            "state": "Inspection and unrelated requests contend",
+            "why": "The failure domain is the resource pool, not the source-code module."
+          },
+          {
+            "event": "Callers time out and retry",
+            "state": "Attempt rate rises while useful capacity falls",
+            "why": "A local resource regression now participates in a distributed feedback loop."
+          },
+          {
+            "event": "Operators open the normal dashboard",
+            "state": "Dashboard depends on unhealthy serving path",
+            "why": "The recovery path shares the failure domain, delaying intervention."
+          }
+        ]
+      },
+      {
+        "name": "Repaired: budget, staged scope, independent disable",
+        "steps": [
+          {
+            "event": "Evaluate candidate in isolated test",
+            "state": "Correctness and adversarial cost both measured",
+            "why": "Reject unsafe evaluation before any customer request sees it."
+          },
+          {
+            "event": "Admit a small canary cohort",
+            "state": "Version fixed · Scope constrained · CPU budget enabled",
+            "why": "The change cannot immediately consume the whole fleet’s serving budget."
+          },
+          {
+            "event": "Cost gate detects a regression",
+            "state": "Candidate cannot advance to the next stage",
+            "why": "A gate ties observed evidence to a release transition."
+          },
+          {
+            "event": "Disable via independent management path",
+            "state": "Operator access does not require the failing evaluator",
+            "why": "The repair action is outside the affected dependency graph."
+          },
+          {
+            "event": "Switch to known-safe version and verify",
+            "state": "User latency and errors recover; rule state is visible",
+            "why": "Recovery is measured at user-facing behavior, not assumed from a successful admin command."
+          }
+        ]
+      }
+    ],
+    "boundary": "Original conceptual teaching and hypothetical worked examples. These sections explain transferable mechanisms; they are not additional claims about the linked company implementation.",
+    "wordCount": 867,
+    "example": {
+      "title": "A release gate · policy pseudocode",
+      "code": "candidate = buildImmutableRuleVersion();\nrequire(functionalTests(candidate));\nrequire(adversarialCostTests(candidate));\nrequire(knownSafeVersionAvailable());\nrequire(independentDisablePathDrilled());\n\nfor (cohort : rolloutCohorts) {\n    activate(candidate, cohort);\n    observations = observeUserAndResourceBehavior(cohort);\n    if (!passesEvidenceGate(observations)) {\n        disableOrRestoreKnownSafeVersion(cohort);\n        stopExpansion();\n    }\n}",
+      "explanation": "The gate belongs before expansion, and it observes the user-facing service plus the resources that can starve it. This is a model of a policy, not a complete deployer. “Observe” must specify traffic, duration, baselines, thresholds and authority to stop. Cost tests and runtime bounds protect cases the canary does not see. The emergency path needs its own scoped risk decision rather than silently bypassing every guard."
+    },
+    "references": []
+  },
+  "git-storage": {
+    "thesis": "Scale the work that can happen independently; coordinate only the state whose meaning depends on order.",
+    "prerequisites": [
+      "Immutable object: its bytes do not change after creation.",
+      "Reference: a mutable name pointing to a version or object.",
+      "Compare-and-swap: update only if the current value still equals an expected value.",
+      "Durability and visibility: surviving failure and becoming observable are different guarantees."
+    ],
+    "chapters": [
+      {
+        "title": "1. Derive the split from the data, not from a product diagram",
+        "paragraphs": [
+          "Imagine a versioned-document service. A large document body is immutable after upload. A small record says which version is current. Two clients can upload two different bodies at the same time without agreeing on an order. But if both replace the same current-version pointer, the service needs a policy for the conflict.",
+          "The body is bulk data; the pointer is coordination state. Sending every byte through the same serial path as the pointer forces independent work to contend unnecessarily. Keeping the bytes outside that path can reduce coordinated work, but only if a published pointer is guaranteed to resolve to the correct durable bytes.",
+          "This is a general model used here as a teaching extension. The original article’s system-specific facts remain in the source summary and architecture section. Do not assume this illustration describes the exact storage internals, quorum placement, or failure tolerances of that deployment."
+        ]
+      },
+      {
+        "title": "2. Make the invariant precise enough to reject a bad design",
+        "paragraphs": [
+          "State the invariant: every committed visible pointer must refer to an object that already satisfies the required durability contract. This does not say “upload was started”, “one cache has it”, or “the client probably sent it”. It requires an explicit successful durable-write acknowledgement from the object layer before pointer publication.",
+          "If you publish the pointer first and upload second, a reader can observe a version that it cannot fetch. A crash in that interval can make the broken reference permanent. If you upload first and pointer publication fails, you instead have an unreferenced object. That consumes storage but does not expose nonexistent content as a successful update.",
+          "The ordering deliberately chooses a more recoverable failure. Orphans can be reconciled or collected after a safety interval. A visible reference to missing data is a correctness violation that can affect every reader. This is the connection between write ordering, acknowledgement boundaries, and recoverability."
+        ]
+      },
+      {
+        "title": "3. Understand compare-and-swap through a concrete conflict",
+        "paragraphs": [
+          "Suppose current version is V7. Writer A prepares V8 and writer B prepares V9. Both read V7. An unconditional last-writer update can silently discard one intent. With compare-and-swap, A asks “replace V7 with V8 only if current is still V7”. If A wins, B’s corresponding V7→V9 update fails. B must decide whether to rebase, merge, or report conflict.",
+          "The comparison and update must be one atomic operation in the authority that owns the pointer. Reading V7 from a cache and later issuing an unconditional write does not implement compare-and-swap. Reading and writing separate rows may also leave a multi-row invariant unprotected. Define the exact transaction scope.",
+          "Compare-and-swap does not make all writers succeed, and it does not remove contention on one hot pointer. It turns a silent lost update into an explicit conflict. With version tokens, also consider whether values can cycle back to an earlier representation: using a monotonic generation can distinguish a genuinely unchanged state from a state that changed and returned to the same value."
+        ]
+      },
+      {
+        "title": "4. Separate the properties people compress into “strong consistency”",
+        "paragraphs": [
+          "Durability asks whether acknowledged state survives the promised failures. Atomicity asks whether related changes commit together. Ordering asks how concurrent pointer transitions are serialized. Read freshness asks which committed transition a reader is guaranteed to observe. A system can offer some of these strongly and others weakly.",
+          "A disposable cache can be consistent with the correct immutable object version while still serving an older pointer version. Whether that is allowed depends on the API. After a successful write, must the same client immediately read its new version? Must every client? Can an explicit version read be stronger than a “latest” read? These are product contracts, not consequences of merely using object storage.",
+          "If a system checks an authoritative version then fetches immutable data for that version, the reader can assemble a coherent snapshot without chasing a moving latest pointer repeatedly. But freshness still depends on the version-check semantics. Do not infer linearizable reads or cross-region bounds without evidence about that authority."
+        ]
+      },
+      {
+        "title": "5. Compaction and garbage collection are different correctness problems",
+        "paragraphs": [
+          "Compaction changes physical layout while preserving the logical object set. It should publish replacement data before retiring old layout references. A reader may still be using the earlier manifest, so deleting inputs immediately after the new manifest appears can race with that reader.",
+          "Garbage collection removes logical objects judged unreachable. This is a stronger claim than “no current request is reading it” or “it is not in the latest pointer”. Historical versions, in-flight writes, stale manifests, and retention promises can all keep data live. The original article leaves some detailed lifecycle behavior for separate discussion; do not fill that gap with an invented protocol.",
+          "A hypothetical design can use generations, leases, grace periods, or explicit reader tracking to establish safe retirement. Each has costs: waiting consumes storage, tracking adds coordination, and time-based expiry needs careful assumptions about pauses and delayed work. State which mechanism you rely on and what failure invalidates it."
+        ]
+      },
+      {
+        "title": "6. Explain the second-order bottleneck and the simpler alternative",
+        "paragraphs": [
+          "Moving request serving onto more compute can expose metadata contention, object-store bandwidth, or compaction throughput. More readers do not increase the rate at which one hot pointer can accept conflicting updates. Separating maintenance prevents CPU contention but does not guarantee maintenance keeps up with incoming fragmentation.",
+          "Model the rates: new packs or segments arrive at rate r, maintenance consolidates at effective rate c, and backlog changes according to their difference after accounting for the compaction scheme. If the backlog grows without bound, read amplification or storage cost eventually changes even if foreground throughput looks healthy today.",
+          "Do not build a custom metadata service solely because a large company did. For a smaller versioned-document workload, a database row plus immutable object storage may be sufficient, or a single database may store both body and pointer. Add distributed coordination infrastructure only after the invariant, measured bottleneck, and operational ownership justify it."
+        ]
+      }
+    ],
+    "misconceptions": [
+      [
+        "“Immutable data needs no coordination anywhere.”",
+        "Its publication, retention, and reachability still involve mutable state."
+      ],
+      [
+        "“CAS guarantees no write is rejected.”",
+        "It makes conflicting transitions explicit; losers still need a resolution policy."
+      ],
+      [
+        "“The new manifest is committed, so old files can be deleted.”",
+        "A reader or operation may still legitimately reference the old generation."
+      ]
+    ],
+    "connections": [
+      {
+        "term": "Idempotency",
+        "relation": "Resolves the lost-acknowledgement window",
+        "explanation": "A committed CAS can succeed even if the writer loses its reply. Reconcile using operation identity and authoritative version before creating another update.",
+        "target": "idempotency"
+      },
+      {
+        "term": "Retries",
+        "relation": "Must distinguish a conflict from a transient failure",
+        "explanation": "Blindly replaying the same stale expected version cannot resolve a genuine concurrent update. Retrying with a new expected version changes the semantics.",
+        "target": "safe-retries"
+      },
+      {
+        "term": "MVCC and snapshots",
+        "relation": "Keep readers coherent while writers advance",
+        "explanation": "Versioned reads avoid assembling one response from incompatible generations; reclamation must respect live versions.",
+        "target": null
+      },
+      {
+        "term": "Cache invalidation",
+        "relation": "Moves the mutable boundary to version discovery",
+        "explanation": "Immutable content is easy to cache by identity. Discovering the latest allowed version still needs a freshness contract.",
+        "target": null
+      },
+      {
+        "term": "Configuration rollout",
+        "relation": "Uses the same immutable-version / active-pointer split",
+        "explanation": "Publish a complete version first, then activate it conditionally and retain a safe rollback target.",
+        "target": "safe-config"
+      }
+    ],
+    "checkpoint": [
+      "Why upload the object before publishing its pointer, even though this can leave orphaned data?",
+      "Because an orphan is a recoverable storage leak, while a committed pointer to missing data breaks a reader-visible invariant. Ordering publication after durable upload chooses the failure that can be cleaned up without exposing nonexistent content. Collection must still protect in-flight publication and historical readers."
+    ],
+    "scenarios": [
+      {
+        "name": "Broken: publish before durability",
+        "steps": [
+          {
+            "event": "Current pointer is V7",
+            "state": "V7 exists · Reader can fetch it",
+            "why": "The starting state satisfies the invariant."
+          },
+          {
+            "event": "Writer publishes V8 before upload completes",
+            "state": "Pointer: V8 · Durable V8 bytes: absent",
+            "why": "Pointer visibility outruns object durability."
+          },
+          {
+            "event": "A reader observes V8",
+            "state": "Read of current succeeds · Fetch of body fails",
+            "why": "A successful metadata read does not imply a usable document."
+          },
+          {
+            "event": "Writer crashes during upload",
+            "state": "Pointer remains V8 · Body still unavailable",
+            "why": "The violation survives the writer failure; a cache cannot reconstruct absent durable data."
+          }
+        ]
+      },
+      {
+        "name": "Repaired: durable bytes, then conditional publication",
+        "steps": [
+          {
+            "event": "A and B both observe V7",
+            "state": "Expected pointer for each writer: V7",
+            "why": "They prepare independent immutable candidates."
+          },
+          {
+            "event": "A uploads V8; B uploads V9",
+            "state": "Both bodies durable · Active pointer: V7",
+            "why": "Bulk writes proceed without agreeing on the active version."
+          },
+          {
+            "event": "A conditionally publishes V7→V8",
+            "state": "Active pointer: V8 · A gets durable success",
+            "why": "The authoritative comparison and update are atomic."
+          },
+          {
+            "event": "B conditionally publishes V7→V9",
+            "state": "Conflict · Active pointer remains V8",
+            "why": "B must merge, rebase, or report conflict; it must not silently overwrite."
+          },
+          {
+            "event": "A loses its success reply",
+            "state": "Client outcome uncertain · Authority: V8",
+            "why": "The operation may be complete even when the response is lost."
+          },
+          {
+            "event": "A reconciles; old data retained safely",
+            "state": "Pointer: V8 · Prior readers may still use V7",
+            "why": "Lost-reply recovery and lifecycle safety remain separate responsibilities."
+          }
+        ]
+      }
+    ],
+    "boundary": "Original conceptual teaching and hypothetical worked examples. These sections explain transferable mechanisms; they are not additional claims about the linked company implementation.",
+    "wordCount": 927,
+    "example": {
+      "title": "Publication ordering · storage pseudocode",
+      "code": "expectedVersion = readAuthoritativeVersion(resource);\nobjectId = writeImmutableObject(body);\nrequire(objectDurabilityAcknowledged(objectId));\n\nresult = compareAndSwap(\n    resource,\n    expected = expectedVersion,\n    replacement = objectId,\n    operationId = stableIntentId\n);\nif (result == CONFLICT) reportConflict();\nif (result == UNKNOWN) reconcileAuthoritativeOutcome();\n// Unreferenced objects become cleanup candidates only\n// after publication, reader, and retention safety checks.",
+      "explanation": "Upload-first prevents a visible pointer from outrunning the required durability acknowledgement. CAS protects against a lost update; it does not automatically decide whether merging is valid. UNKNOWN is not the same as CONFLICT: a lost response may conceal a successful publication. Cleanup must account for in-flight publication and readers on older generations. This is a generic teaching model, not source code for GitHub Ref-CAS."
+    },
+    "references": []
+  }
+}
