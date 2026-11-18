@@ -1,3 +1,4 @@
+import {details} from './problem-details.js?v=approaches-4';
 import {extraPatterns, extraProblems} from './more-problems.js?v=all-patterns-2';
 const code = (s) => `class Solution {\n${s}\n}`;
 export const patterns={
@@ -240,3 +241,11 @@ export const problems=[
 
 Object.assign(patterns, extraPatterns);
 problems.push(...extraProblems);
+
+// Keep the displayed efficient complexity aligned with the executable implementation.
+const mergeProblem = problems.find(p => p.id === 56);
+mergeProblem.legacyCode = mergeProblem.code;
+mergeProblem.code = details[56].efficientCode;
+mergeProblem.time = 'O(n log n)';
+mergeProblem.space = 'O(n) + output';
+mergeProblem.pitfall = 'Closed intervals that touch must merge. Merge sort orders endpoints in O(n log n); the input order is modified.';

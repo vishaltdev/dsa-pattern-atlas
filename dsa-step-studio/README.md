@@ -18,6 +18,14 @@ On mobile, switch between Visualize and Java code; expand Debugger controls for 
 
 Keyboard: Left/Right step; Space play/pause; C continue; O step over; U step out; / search; Ctrl/Cmd+Enter build.
 
+## Problem contracts and solution comparisons
+
+Every one of the 75 runnable problems now has a self-contained problem statement, a worked input/output example, constraints, and a link to its LeetCode source. Numerical bounds were checked against primary problem pages on 18 Nov 2026 for 73 entries. The two premium pages (370 and 774) did not expose their numerical bounds; these entries explicitly show teaching input requirements rather than guessed official bounds. Library empty-input extensions, class-operation drivers, and the separate sandbox limits are identified.
+
+Read the statement and constraints, then compare the two approach cards. Choose **Brute force / baseline** or **Efficient approach** to execute the selected Java solution with the same JSON input. Both use the existing instruction trace, explanations, watches, breakpoints, and stack/heap views. Input changes are shared per problem; Java drafts, selected approach, and breakpoints are saved separately. Existing efficient drafts remain compatible. Restore resets the loaded solution and built-in input.
+
+Each comparison explains the repeated work, complexity, and reason for the improvement. Straightforward baselines are identified where both algorithms share the same asymptotic time: two-pass versus one-pass linked lists, visited versus in-place word search, and output-bound subset generation. Dense Dijkstra is not claimed to beat Bellman–Ford on every sparse small graph. Merge Intervals now uses visible merge sort plus a linear merge for O(n log n) time. Brute-force searches retain the same execution limits; large candidate ranges and exponential searches may require smaller inputs.
+
 ## Coverage
 
 All 54 problems in the original nine-pattern revision plan are included. Each of the other 21 Atlas patterns has one runnable worked problem. The parent Atlas retains its 180-entry roadmap and 30 separate guided labs.
@@ -71,7 +79,7 @@ Limits: 16,000 characters each for source/JSON; 128 items per input parameter; 5
 
 ## Validation
 
-Run `node --test tests/*.test.mjs` from this folder. The suite has 278 tests, including all 225 built-in input/output cases, full revision coverage, cycle entry and shared identity, rewiring, matrix row independence, recursive frames, decimals, heap/deque invariants, trie terminals, and brute-force comparisons for knapsack, histograms and rotated binary search. Debugger tests cover operand capture without re-execution, short-circuit decisions, stable frame identities, before/after diffs, breakpoint resume behavior, call stepping, safe watch paths, and diagram reference/dependency accuracy. The parent build also runs its eight Python tests (286 automated tests total). Browser checks exercise a full trace for all 30 patterns plus breakpoint playback, recursive stepping, frame selection, watch changes, mobile filtering, node/matrix views and code tabs at narrow widths.
+Run `node --test tests/*.test.mjs` from this folder. The suite has 506 tests, including all 225 built-in input/output cases, full revision coverage, cycle entry and shared identity, rewiring, matrix row independence, recursive frames, decimals, heap/deque invariants, trie terminals, and brute-force comparisons for knapsack, histograms and rotated binary search. Comparison tests run all 225 baseline examples, check coverage and source boundaries, and compare both solutions on deterministic randomized inputs. Debugger tests cover operand capture without re-execution, short-circuit decisions, stable frame identities, before/after diffs, breakpoint resume behavior, call stepping, safe watch paths, and diagram reference/dependency accuracy. The parent build also runs its eight Python tests (514 automated tests total). Browser checks exercise all 75 baseline selectors and traces plus breakpoint playback, recursive stepping, frame selection, watch changes, mobile filtering, node/matrix views and code tabs at narrow widths.
 
 ## Hosting and privacy
 
